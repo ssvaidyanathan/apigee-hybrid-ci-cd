@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ProxyEndpoint name="default">
+
+	<DefaultFaultRule name="all">
+		<AlwaysEnforce>true</AlwaysEnforce>
+
+		<Step>
+			<Condition>flow.apigee.error.code = null</Condition>
+			<Name>AssignMessage.SetInternalServerErrorVariables</Name>
+		</Step>
+		<Step>
+			<Name>JavaScript.LogToLoggly</Name>
+		</Step>
+		<Step>
+			<Name>RaiseFault.Json</Name>
+		</Step>
+	</DefaultFaultRule>
+
+	<PreFlow>
+		<Request>
+			<Step>
+				<Name>AssignMessage.CopyRequest</Name>
+			</Step>
+		</Request>
+	</PreFlow>
+
+	<Flows>
+		<Flow name="Get Latest Exchange Rates">
+            		<Condition>
+				(request.verb = "GET") and 
+				(proxy.pathsuffix MatchesPath "/latest")
+			</Condition>
+        	</Flow>
+        	<Flow name="Get Exchange Rates by Date">
+            		<Condition>
+				(request.verb = "GET") and 
+				(proxy.pathsuffix ~~  "/\d{4}\-(0?[1-9]|1[012])\-(0?[1-9]|[12][0-9]|3[01])")
+			</Condition>
+        	</Flow>
+
+		<Flow name="404">
+			<Request>
+				<Step>
+					<Name>AssignMessage.SetApigee404ErrorVariables</Name>
+				</Step>
+				<Step>
+					<Name>RaiseFault.GoToFaultRules</Name>
+				</Step>
+			</Request>
+		</Flow>
+	</Flows>
+
+	<RouteRule name="default">
+		<TargetEndpoint>default</TargetEndpoint>
+	</RouteRule>
+
+	<HTTPProxyConnection>
+		<BasePath>/currency/v1</BasePath>
+		<VirtualHost>secure</VirtualHost>
+	</HTTPProxyConnection>
+</ProxyEndpoint>

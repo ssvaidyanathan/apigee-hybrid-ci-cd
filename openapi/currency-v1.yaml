@@ -1,0 +1,572 @@
+swagger: '2.0'
+info:
+  description: 'OpenAPI Specification for the Currency API'
+  version: 1.0.0
+  title: Currency API Version 1
+host: saisarantest-eval-test.apigee.net
+basePath: /currency/v1
+schemes:
+  - https
+paths:
+  /rates:
+    get:
+      summary: Get Rates
+      operationId: Get Rates
+      description: Get Rates
+      produces:
+        - application/json
+      parameters:
+        - name: base
+          in: query
+          description: Base currency
+          required: false
+          type: string
+        - name: date
+          in: query
+          description: Date in YYYY-MM-DD format
+          required: false
+          type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/rates'
+  /rates-new:
+    get:
+      summary: Get Rates New
+      operationId: Get Rates New
+      description: Get Rates New
+      produces:
+        - application/json
+      parameters:
+        - name: base
+          in: query
+          description: Base currency
+          required: false
+          type: string
+        - name: date
+          in: query
+          description: Date in YYYY-MM-DD format
+          required: false
+          type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/rates'
+definitions:
+  rates:
+    type: object
+    properties:
+      success:
+        type: string
+      timestamp:
+        type: integer
+      base:
+        type: string
+      date:
+        type: string
+      rates:
+        type: object
+        properties:
+          AED:
+            type: number
+            format: double
+          AFN:
+            type: number
+            format: double
+          ALL:
+            type: number
+            format: double
+          AMD:
+            type: number
+            format: double
+          ANG:
+            type: number
+            format: double
+          AOA:
+            type: number
+            format: double
+          ARS:
+            type: number
+            format: double
+          AUD:
+            type: number
+            format: double
+          AWG:
+            type: number
+            format: double
+          AZN:
+            type: number
+            format: double
+          BAM:
+            type: number
+            format: double
+          BBD:
+            type: number
+            format: double
+          BDT:
+            type: number
+            format: double
+          BGN:
+            type: number
+            format: double
+          BHD:
+            type: number
+            format: double
+          BIF:
+            type: number
+            format: double
+          BMD:
+            type: number
+            format: double
+          BND:
+            type: number
+            format: double
+          BOB:
+            type: number
+            format: double
+          BRL:
+            type: number
+            format: double
+          BSD:
+            type: number
+            format: double
+          BTC:
+            type: number
+            format: double
+          BTN:
+            type: number
+            format: double
+          BWP:
+            type: number
+            format: double
+          BYR:
+            type: number
+            format: double
+          BZD:
+            type: number
+            format: double
+          CAD:
+            type: number
+            format: double
+          CDF:
+            type: number
+            format: double
+          CHF:
+            type: number
+            format: double
+          CLF:
+            type: number
+            format: double
+          CLP:
+            type: number
+            format: double
+          CNY:
+            type: number
+            format: double
+          COP:
+            type: number
+            format: double
+          CRC:
+            type: number
+            format: double
+          CUC:
+            type: number
+            format: double
+          CUP:
+            type: number
+            format: double
+          CVE:
+            type: number
+            format: double
+          CZK:
+            type: number
+            format: double
+          DJF:
+            type: number
+            format: double
+          DKK:
+            type: number
+            format: double
+          DOP:
+            type: number
+            format: double
+          DZD:
+            type: number
+            format: double
+          EGP:
+            type: number
+            format: double
+          ERN:
+            type: number
+            format: double
+          ETB:
+            type: number
+            format: double
+          EUR:
+            type: number
+            format: double
+          FJD:
+            type: number
+            format: double
+          FKP:
+            type: number
+            format: double
+          GBP:
+            type: number
+            format: double
+          GEL:
+            type: number
+            format: double
+          GGP:
+            type: number
+            format: double
+          GHS:
+            type: number
+            format: double
+          GIP:
+            type: number
+            format: double
+          GMD:
+            type: number
+            format: double
+          GNF:
+            type: number
+            format: double
+          GTQ:
+            type: number
+            format: double
+          GYD:
+            type: number
+            format: double
+          HKD:
+            type: number
+            format: double
+          HNL:
+            type: number
+            format: double
+          HRK:
+            type: number
+            format: double
+          HTG:
+            type: number
+            format: double
+          HUF:
+            type: number
+            format: double
+          IDR:
+            type: number
+            format: double
+          ILS:
+            type: number
+            format: double
+          IMP:
+            type: number
+            format: double
+          INR:
+            type: number
+            format: double
+          IQD:
+            type: number
+            format: double
+          IRR:
+            type: number
+            format: double
+          ISK:
+            type: number
+            format: double
+          JEP:
+            type: number
+            format: double
+          JMD:
+            type: number
+            format: double
+          JOD:
+            type: number
+            format: double
+          JPY:
+            type: number
+            format: double
+          KES:
+            type: number
+            format: double
+          KGS:
+            type: number
+            format: double
+          KHR:
+            type: number
+            format: double
+          KMF:
+            type: number
+            format: double
+          KPW:
+            type: number
+            format: double
+          KRW:
+            type: number
+            format: double
+          KWD:
+            type: number
+            format: double
+          KYD:
+            type: number
+            format: double
+          KZT:
+            type: number
+            format: double
+          LAK:
+            type: number
+            format: double
+          LBP:
+            type: number
+            format: double
+          LKR:
+            type: number
+            format: double
+          LRD:
+            type: number
+            format: double
+          LSL:
+            type: number
+            format: double
+          LTL:
+            type: number
+            format: double
+          LVL:
+            type: number
+            format: double
+          LYD:
+            type: number
+            format: double
+          MAD:
+            type: number
+            format: double
+          MDL:
+            type: number
+            format: double
+          MGA:
+            type: number
+            format: double
+          MKD:
+            type: number
+            format: double
+          MMK:
+            type: number
+            format: double
+          MNT:
+            type: number
+            format: double
+          MOP:
+            type: number
+            format: double
+          MRO:
+            type: number
+            format: double
+          MUR:
+            type: number
+            format: double
+          MVR:
+            type: number
+            format: double
+          MWK:
+            type: number
+            format: double
+          MXN:
+            type: number
+            format: double
+          MYR:
+            type: number
+            format: double
+          MZN:
+            type: number
+            format: double
+          NAD:
+            type: number
+            format: double
+          NGN:
+            type: number
+            format: double
+          NIO:
+            type: number
+            format: double
+          NOK:
+            type: number
+            format: double
+          NPR:
+            type: number
+            format: double
+          NZD:
+            type: number
+            format: double
+          OMR:
+            type: number
+            format: double
+          PAB:
+            type: number
+            format: double
+          PEN:
+            type: number
+            format: double
+          PGK:
+            type: number
+            format: double
+          PHP:
+            type: number
+            format: double
+          PKR:
+            type: number
+            format: double
+          PLN:
+            type: number
+            format: double
+          PYG:
+            type: number
+            format: double
+          QAR:
+            type: number
+            format: double
+          RON:
+            type: number
+            format: double
+          RSD:
+            type: number
+            format: double
+          RUB:
+            type: number
+            format: double
+          RWF:
+            type: number
+            format: double
+          SAR:
+            type: number
+            format: double
+          SBD:
+            type: number
+            format: double
+          SCR:
+            type: number
+            format: double
+          SDG:
+            type: number
+            format: double
+          SEK:
+            type: number
+            format: double
+          SGD:
+            type: number
+            format: double
+          SHP:
+            type: number
+            format: double
+          SLL:
+            type: number
+            format: double
+          SOS:
+            type: number
+            format: double
+          SRD:
+            type: number
+            format: double
+          STD:
+            type: number
+            format: double
+          SVC:
+            type: number
+            format: double
+          SYP:
+            type: number
+            format: double
+          SZL:
+            type: number
+            format: double
+          THB:
+            type: number
+            format: double
+          TJS:
+            type: number
+            format: double
+          TMT:
+            type: number
+            format: double
+          TND:
+            type: number
+            format: double
+          TOP:
+            type: number
+            format: double
+          TRY:
+            type: number
+            format: double
+          TTD:
+            type: number
+            format: double
+          TWD:
+            type: number
+            format: double
+          TZS:
+            type: number
+            format: double
+          UAH:
+            type: number
+            format: double
+          UGX:
+            type: number
+            format: double
+          USD:
+            type: number
+            format: double
+          UYU:
+            type: number
+            format: double
+          UZS:
+            type: number
+            format: double
+          VEF:
+            type: number
+            format: double
+          VND:
+            type: number
+            format: double
+          VUV:
+            type: number
+            format: double
+          WST:
+            type: number
+            format: double
+          XAF:
+            type: number
+            format: double
+          XAG:
+            type: number
+            format: double
+          XAU:
+            type: number
+            format: double
+          XCD:
+            type: number
+            format: double
+          XDR:
+            type: number
+            format: double
+          XOF:
+            type: number
+            format: double
+          XPF:
+            type: number
+            format: double
+          YER:
+            type: number
+            format: double
+          ZAR:
+            type: number
+            format: double
+          ZMK:
+            type: number
+            format: double
+          ZMW:
+            type: number
+            format: double
+          ZWL:
+            type: number
+            format: double

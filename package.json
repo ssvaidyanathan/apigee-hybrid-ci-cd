@@ -1,0 +1,18 @@
+{
+	"name": "currency-v1",
+	"version": "1.0.0",
+	"devDependencies": {
+		"prettyjson": ">=1.1.3",
+		"apickli": "^1.6.3",
+		"cucumber": "^0.10.2",
+		"jsonfile": ">=2.3.1",
+		"lodash": ">=4.15.0",
+		"bluebird": "^3.3.5",
+		"chai": "^3",
+		"chai-fuzzy": "^1",
+		"mocha": "^2",
+		"sinon": "^1",
+		"istanbul": ">=1.0.0-alpha.2",
+		"apigeelint": "0.3.0"
+	}
+}
