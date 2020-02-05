@@ -32,6 +32,11 @@ pipeline {
               sh "mvn -ntp test -P${env.APIGEE_PROFILE} -Ddeployment.suffix=${env.APIGEE_PREFIX} -Dcommit=${env.GIT_COMMIT} -Dbranch=${env.GIT_BRANCH} -Duser.name=jenkins"
             }
         }
+        stage('Pre-deployment configuration') {
+            steps { 
+              sh "mvn -ntp apigee-config:targetservers -P${env.APIGEE_PROFILE} -Ddeployment.suffix=${env.APIGEE_PREFIX} -Dfile=${APIGEE_SA_CREDS} -Dapigee.config.options=update"
+            }
+        }
         stage('Package proxy bundle') {
             steps { 
               sh "mvn -ntp apigee-enterprise:configure -P${env.APIGEE_PROFILE} -Ddeployment.suffix=${env.APIGEE_PREFIX}"
