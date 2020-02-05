@@ -24,9 +24,13 @@ pipeline {
                     env.APIGEE_PROFILE = "test"
                 }
               }
-              sh "echo ${APIGEE_SA_CREDS}"
               sh "mvn clean"
             }
+        }
+        stage('SA') {
+            steps {
+            sh "echo ${APIGEE_SA_CREDS}"            
+          }
         }
         stage('Static Code Analysis, Unit Test and Coverage') {
             steps {
