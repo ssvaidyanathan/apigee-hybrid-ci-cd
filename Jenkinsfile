@@ -27,11 +27,6 @@ pipeline {
               sh "mvn clean"
             }
         }
-        stage('SA') {
-            steps {
-            sh "echo ${APIGEE_SA_CREDS}"            
-          }
-        }
         stage('Static Code Analysis, Unit Test and Coverage') {
             steps {
               sh "mvn -ntp test -P${env.APIGEE_PROFILE} -Ddeployment.suffix=${env.APIGEE_PREFIX} -Dcommit=${env.GIT_COMMIT} -Dbranch=${env.GIT_BRANCH} -Duser.name=jenkins"
@@ -44,7 +39,7 @@ pipeline {
         }
         stage('Deploy proxy bundle') {
             steps {
-              sh "mvn -ntp apigee-enterprise:deploy -P${env.APIGEE_PROFILE} -Ddeployment.suffix=${env.APIGEE_PREFIX} -Dusername=${APIGEE_CREDS_USR} -Dpassword=${APIGEE_CREDS_PSW}"
+              sh "mvn -ntp apigee-enterprise:deploy -P${env.APIGEE_PROFILE} -Ddeployment.suffix=${env.APIGEE_PREFIX} -Dfile=${APIGEE_SA_CREDS}"
             }
         }
         stage('Functional Test') {
