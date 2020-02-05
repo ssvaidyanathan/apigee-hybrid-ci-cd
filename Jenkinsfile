@@ -5,6 +5,7 @@ pipeline {
 
     environment {
         APIGEE_CREDS = credentials('apigee')
+        APIGEE_SA_CREDS = credentials('apigee-service-account')
         HOME = '.'
     }
 
@@ -23,6 +24,7 @@ pipeline {
                     env.APIGEE_PROFILE = "test"
                 }
               }
+              sh "echo ${APIGEE_SA_CREDS}"
               sh "mvn clean"
             }
         }

@@ -45,8 +45,6 @@
 				<apigee.hosturl>https://apigee.googleapis.com</apigee.hosturl>
 				<apigee.apiversion>v1</apigee.apiversion>
 				<apigee.org>amer-cs-hybrid-demo2</apigee.org>
-				<apigee.username>${username}</apigee.username>
-				<apigee.password>${password}</apigee.password>
 				<apigee.options>override</apigee.options> <!-- overrides is default and the only option -->
 				<apigee.serviceaccount.file>${file}</apigee.serviceaccount.file>
 				<api.northbound.domain>amer-cs-hybrid-demo2-test.hybrid-apigee.net</api.northbound.domain>
@@ -61,8 +59,6 @@
 				<apigee.hosturl>https://apigee.googleapis.com</apigee.hosturl>
 				<apigee.apiversion>v1</apigee.apiversion>
 				<apigee.org>amer-cs-hybrid-demo2</apigee.org>
-				<apigee.username>${username}</apigee.username>
-				<apigee.password>${password}</apigee.password>
 				<apigee.options>override</apigee.options> <!-- overrides is default and the only option -->
 				<apigee.serviceaccount.file>${file}</apigee.serviceaccount.file>
 				<api.northbound.domain>amer-cs-hybrid-demo2-test.hybrid-apigee.net</api.northbound.domain>
