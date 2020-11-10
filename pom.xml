@@ -88,14 +88,14 @@
 			<id>ngsaas-test</id>
 			<properties>
 				<apigee.profile>ngsaas-test</apigee.profile>
-				<apigee.env>default-dev</apigee.env>
+				<apigee.env>default-test</apigee.env>
 				<apigee.hosturl>https://apigee.googleapis.com</apigee.hosturl>
 				<apigee.apiversion>v1</apigee.apiversion>
 				<apigee.org>${org}</apigee.org>
 				<apigee.options>override</apigee.options> <!-- overrides is default and the only option -->
 				<apigee.bearer>${bearer}</apigee.bearer> <!-- this takes precedence over service account file -->
 				<apigee.serviceaccount.file>${file}</apigee.serviceaccount.file>
-				<api.northbound.domain>api-dev.ssvaidyanathan.com</api.northbound.domain>
+				<api.northbound.domain>api-test.ssvaidyanathan.com</api.northbound.domain>
 				<apigee.config.options>update</apigee.config.options>
 				<api.testtag>~@wip,~@mock</api.testtag>
 			</properties>
