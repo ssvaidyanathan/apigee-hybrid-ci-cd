@@ -88,7 +88,7 @@
 			<id>ngsaas-test</id>
 			<properties>
 				<apigee.profile>ngsaas-test</apigee.profile>
-				<apigee.env>default-test</apigee.env>
+				<apigee.env>default-dev</apigee.env>
 				<apigee.hosturl>https://apigee.googleapis.com</apigee.hosturl>
 				<apigee.apiversion>v1</apigee.apiversion>
 				<apigee.org>${org}</apigee.org>
