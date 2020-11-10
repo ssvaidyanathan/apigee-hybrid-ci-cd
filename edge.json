@@ -1,7 +1,29 @@
 {
    "version":"1.0",
    "envConfig":{
-      "test":{
+      "default-dev":{
+         "targetServers":[
+            {
+               "name":"currencyTarget",
+               "host":"api.frankfurter.app",
+               "isEnabled":true,
+               "port":443,
+               "sSLInfo":{
+                  "enabled":"true"
+               }
+            }
+         ],
+         "references":[
+
+         ],
+         "resourcefiles":[
+
+         ],
+         "flowhooks":[
+
+         ]
+      },
+      "default-test":{
          "targetServers":[
             {
                "name":"currencyTarget",

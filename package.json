@@ -13,6 +13,6 @@
 		"mocha": "^2",
 		"sinon": "^1",
 		"istanbul": ">=1.0.0-alpha.2",
-		"apigeelint": "0.3.0"
+		"apigeelint": "2.1.1"
 	}
 }

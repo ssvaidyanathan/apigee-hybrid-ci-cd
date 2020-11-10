@@ -3,11 +3,10 @@
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>apigee</groupId>
-	<artifactId>currency-v1</artifactId>
-	<version>-</version>
+	<artifactId>currency</artifactId>
+	<version>v1</version>
 	<name>currency-${deployment.suffix}v1</name>
 	<packaging>pom</packaging>
-	<!-- Test -->
 	<pluginRepositories>
 		<pluginRepository>
 			<id>central</id>
@@ -44,11 +43,13 @@
 				<apigee.env>test</apigee.env>
 				<apigee.hosturl>https://apigee.googleapis.com</apigee.hosturl>
 				<apigee.apiversion>v1</apigee.apiversion>
-				<apigee.org>amer-cs-hybrid-demo2</apigee.org>
+				<apigee.org>${org}</apigee.org>
 				<apigee.options>override</apigee.options> <!-- overrides is default and the only option -->
+				<apigee.bearer>${bearer}</apigee.bearer> <!-- this takes precedence over service account file -->
 				<apigee.serviceaccount.file>${file}</apigee.serviceaccount.file>
 				<api.northbound.domain>amer-cs-hybrid-demo2-test.hybrid-apigee.net</api.northbound.domain>
 				<api.testtag>~@wip</api.testtag>
+				<apigee.config.options>update</apigee.config.options>
 			</properties>
 		</profile>
 		<profile>
@@ -58,11 +59,61 @@
 				<apigee.env>prod</apigee.env>
 				<apigee.hosturl>https://apigee.googleapis.com</apigee.hosturl>
 				<apigee.apiversion>v1</apigee.apiversion>
-				<apigee.org>amer-cs-hybrid-demo2</apigee.org>
+				<apigee.org>${org}</apigee.org>
 				<apigee.options>override</apigee.options> <!-- overrides is default and the only option -->
+				<apigee.bearer>${bearer}</apigee.bearer> <!-- this takes precedence over service account file -->
 				<apigee.serviceaccount.file>${file}</apigee.serviceaccount.file>
 				<api.northbound.domain>amer-cs-hybrid-demo2-test.hybrid-apigee.net</api.northbound.domain>
 				<api.testtag>~@wip,~@mock</api.testtag>
+				<apigee.config.options>update</apigee.config.options>
+			</properties>
+		</profile>
+		<profile>
+			<id>ngsaas-dev</id>
+			<properties>
+				<apigee.profile>ngsaas-dev</apigee.profile>
+				<apigee.env>default-dev</apigee.env>
+				<apigee.hosturl>https://apigee.googleapis.com</apigee.hosturl>
+				<apigee.apiversion>v1</apigee.apiversion>
+				<apigee.org>${org}</apigee.org>
+				<apigee.options>override</apigee.options> <!-- overrides is default and the only option -->
+				<apigee.bearer>${bearer}</apigee.bearer> <!-- this takes precedence over service account file -->
+				<apigee.serviceaccount.file>${file}</apigee.serviceaccount.file>
+				<api.northbound.domain>api-dev.ssvaidyanathan.com</api.northbound.domain>
+				<api.testtag>~@wip</api.testtag>
+				<apigee.config.options>update</apigee.config.options>
+			</properties>
+		</profile>
+		<profile>
+			<id>ngsaas-test</id>
+			<properties>
+				<apigee.profile>ngsaas-test</apigee.profile>
+				<apigee.env>default-test</apigee.env>
+				<apigee.hosturl>https://apigee.googleapis.com</apigee.hosturl>
+				<apigee.apiversion>v1</apigee.apiversion>
+				<apigee.org>${org}</apigee.org>
+				<apigee.options>override</apigee.options> <!-- overrides is default and the only option -->
+				<apigee.bearer>${bearer}</apigee.bearer> <!-- this takes precedence over service account file -->
+				<apigee.serviceaccount.file>${file}</apigee.serviceaccount.file>
+				<api.northbound.domain>api-test.ssvaidyanathan.com</api.northbound.domain>
+				<apigee.config.options>update</apigee.config.options>
+				<api.testtag>~@wip,~@mock</api.testtag>
+			</properties>
+		</profile>
+		<profile>
+			<id>ngsaas-prod</id>
+			<properties>
+				<apigee.profile>ngsaas-prod</apigee.profile>
+				<apigee.env>default-test</apigee.env>
+				<apigee.hosturl>https://apigee.googleapis.com</apigee.hosturl>
+				<apigee.apiversion>v1</apigee.apiversion>
+				<apigee.org>${org}</apigee.org>
+				<apigee.options>override</apigee.options> <!-- overrides is default and the only option -->
+				<apigee.bearer>${bearer}</apigee.bearer> <!-- this takes precedence over service account file -->
+				<apigee.serviceaccount.file>${file}</apigee.serviceaccount.file>
+				<api.northbound.domain>api-test.ssvaidyanathan.com</api.northbound.domain>
+				<api.testtag>~@wip,~@mock</api.testtag>
+				<apigee.config.options>update</apigee.config.options>
 			</properties>
 		</profile>
 	</profiles>
@@ -73,8 +124,11 @@
 				<plugin>
 					<groupId>io.apigee.build-tools.enterprise4g</groupId>
 					<artifactId>apigee-edge-maven-plugin</artifactId>
-					<version>1.1.5</version>
 				</plugin>
+				<plugin>
+					<groupId>com.apigee.edge.config</groupId>
+				    <artifactId>apigee-config-maven-plugin</artifactId>
+			    </plugin>
 			</plugins>
 		</pluginManagement>
 
@@ -170,10 +224,6 @@
 							<token>@description</token>
 							<value>commit ${commit} from ${branch} branch. Deployed by ${user.name}</value>
 						</replacement>
-						<replacement>
-							<token>fixer-api-key-here</token>
-							<value>${fixer-api-key}</value>
-						</replacement>
 					</replacements>
 				</configuration>
 			</plugin>
@@ -181,7 +231,7 @@
 			<plugin>
 			    <groupId>com.apigee.edge.config</groupId>
 			    <artifactId>apigee-config-maven-plugin</artifactId>
-			    <version>2.0.0</version>
+			    <version>2.0.1</version>
 			    <executions>
 			        <execution>
 			            <id>create-config-targetservers</id>
@@ -196,7 +246,7 @@
 			<plugin>
 				<groupId>io.apigee.build-tools.enterprise4g</groupId>
 				<artifactId>apigee-edge-maven-plugin</artifactId>
-				<version>2.0.0</version>
+				<version>2.0.4</version>
 				<executions>
 					<execution>
 						<id>configure-bundle-step</id>
