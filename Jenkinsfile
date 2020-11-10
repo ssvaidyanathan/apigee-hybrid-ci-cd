@@ -38,7 +38,7 @@ pipeline {
                     env.APIGEE_PREFIX = ""
                     env.APIGEE_PROFILE = "ngsaas-prod"
                 } else { //feature branches
-                    env.APIGEE_PREFIX = "jenkins"
+                    env.APIGEE_PREFIX = ""
                     env.APIGEE_PROFILE = "ngsaas-dev"
                 }
               }
