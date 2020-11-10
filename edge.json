@@ -44,6 +44,28 @@
          "flowhooks":[
 
          ]
+      },
+      "default-prod":{
+         "targetServers":[
+            {
+               "name":"currencyTarget",
+               "host":"api.frankfurter.app",
+               "isEnabled":true,
+               "port":443,
+               "sSLInfo":{
+                  "enabled":"true"
+               }
+            }
+         ],
+         "references":[
+
+         ],
+         "resourcefiles":[
+
+         ],
+         "flowhooks":[
+
+         ]
       }
    },
    "orgConfig":{
