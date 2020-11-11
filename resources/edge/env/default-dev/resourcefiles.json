@@ -1,0 +1,7 @@
+[
+	{
+	    "name": "global",
+	    "type": "properties",
+	    "file": "./target/resources/edge/resourceFiles/properties/global.properties"
+	}  
+]
