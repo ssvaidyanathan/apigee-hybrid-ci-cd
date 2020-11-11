@@ -29,6 +29,7 @@
 		<project.root.dir>${basedir}</project.root.dir>
 		<target.root.dir>${basedir}/target</target.root.dir>
 		<deployment.suffix>${user.name}</deployment.suffix>
+		<global.ratelimit>50pm</global.ratelimit>
 		<commit></commit>
 		<branch>a local</branch>
 	</properties>
@@ -209,11 +210,12 @@
 				<configuration>
 					<basedir>${target.root.dir}</basedir>
 					<includes>
-						<include>resources/edge/org/apiProducts.json</include>
 						<include>apiproxy/proxies/default.xml</include>
 						<include>apiproxy/proxies/loggly.xml</include>
-						<include>test/integration/test-config.json</include>
 						<include>apiproxy/currency-v1.xml</include>
+						<include>resources/edge/resourceFiles/properties/global.properties</include>
+						<include>resources/edge/org/apiProducts.json</include>
+						<include>test/integration/test-config.json</include>
 					</includes>
 					<replacements>
 						<replacement>
@@ -235,6 +237,10 @@
 						<replacement>
 							<token>proxy-name</token>
 							<value>currency-${deployment.suffix}v1</value>
+						</replacement>
+						<replacement>
+							<token>rateLimitvalue</token>
+							<value>${global.ratelimit}</value>
 						</replacement>
 					</replacements>
 				</configuration>
@@ -268,6 +274,20 @@
 			    <artifactId>apigee-config-maven-plugin</artifactId>
 			    <version>2.0.1</version>
 			    <executions>
+			    	<execution>
+			            <id>create-config-keyvaluemaps</id>
+			            <phase>package</phase>                        
+			            <goals>
+			                <goal>keyvaluemaps</goal>
+			            </goals>
+			        </execution>
+			        <execution>
+			            <id>create-config-resourcefiles</id>
+			            <phase>package</phase>                        
+			            <goals>
+			                <goal>resourcefiles</goal>
+			            </goals>
+			        </execution>
 			        <execution>
 			            <id>create-config-targetservers</id>
 			            <phase>package</phase>                        

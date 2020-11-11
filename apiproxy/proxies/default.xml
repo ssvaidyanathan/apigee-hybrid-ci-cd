@@ -19,6 +19,9 @@
 	<PreFlow>
 		<Request>
 			<Step>
+                <Name>SpikeArrest-RateLimit</Name>
+            </Step>
+			<Step>
 				<Name>AssignMessage.CopyRequest</Name>
 			</Step>
 		</Request>
