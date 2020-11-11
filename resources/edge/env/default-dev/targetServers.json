@@ -1,0 +1,11 @@
+[
+    {
+       "name":"currencyTarget",
+       "host":"api.frankfurter.app",
+       "isEnabled":true,
+       "port":443,
+       "sSLInfo":{
+          "enabled":"true"
+       }
+    }
+]
