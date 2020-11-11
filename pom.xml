@@ -81,7 +81,6 @@
 				<apigee.options>override</apigee.options> <!-- overrides is default and the only option -->
 				<apigee.bearer>${bearer}</apigee.bearer> <!-- this takes precedence over service account file -->
 				<apigee.serviceaccount.file>${file}</apigee.serviceaccount.file>
-				<apigee.config.options>update</apigee.config.options>
 				<apigee.config.dir>./target/resources/edge</apigee.config.dir>
 				<api.northbound.domain>api-dev.ssvaidyanathan.com</api.northbound.domain>
 				<api.testtag>~@wip,~@mock</api.testtag>
@@ -98,7 +97,6 @@
 				<apigee.options>override</apigee.options> <!-- overrides is default and the only option -->
 				<apigee.bearer>${bearer}</apigee.bearer> <!-- this takes precedence over service account file -->
 				<apigee.serviceaccount.file>${file}</apigee.serviceaccount.file>
-				<apigee.config.options>update</apigee.config.options>
 				<apigee.config.dir>./target/resources/edge</apigee.config.dir>
 				<api.northbound.domain>api-test.ssvaidyanathan.com</api.northbound.domain>
 				<api.testtag>~@wip,~@mock</api.testtag>
@@ -115,7 +113,6 @@
 				<apigee.options>override</apigee.options> <!-- overrides is default and the only option -->
 				<apigee.bearer>${bearer}</apigee.bearer> <!-- this takes precedence over service account file -->
 				<apigee.serviceaccount.file>${file}</apigee.serviceaccount.file>
-				<apigee.config.options>update</apigee.config.options>
 				<apigee.config.dir>./target/resources/edge</apigee.config.dir>
 				<api.northbound.domain>api-prod.ssvaidyanathan.com</api.northbound.domain>
 				<api.testtag>~@wip,~@mock</api.testtag>

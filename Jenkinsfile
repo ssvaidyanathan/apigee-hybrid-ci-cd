@@ -65,6 +65,12 @@ pipeline {
               sh "mvn -ntp apigee-enterprise:deploy -P${env.APIGEE_PROFILE} -Dorg=${env.ORG} -Ddeployment.suffix=${env.APIGEE_PREFIX} -Dfile=${APIGEE_SA_CREDS}"
             }
         }
+        stage('Post-deployment configuration') {
+            steps { 
+              sh "mvn -ntp apigee-config:apps -P${env.APIGEE_PROFILE} -Dorg=${env.ORG} -Ddeployment.suffix=${env.APIGEE_PREFIX} -Dfile=${APIGEE_SA_CREDS} -Dapigee.config.options=delete"
+              sh "mvn -ntp apigee-config:apiproducts apigee-config:developers apigee-config:apps -P${env.APIGEE_PROFILE} -Dorg=${env.ORG} -Ddeployment.suffix=${env.APIGEE_PREFIX} -Dfile=${APIGEE_SA_CREDS} -Dapigee.config.options=update"
+            }
+        }
         stage('Functional Test') {
           steps {
             sh "node ./node_modules/cucumber/bin/cucumber.js target/test/integration/features --format json:target/reports.json"
