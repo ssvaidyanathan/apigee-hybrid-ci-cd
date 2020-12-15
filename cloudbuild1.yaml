@@ -1,0 +1,38 @@
+steps:
+- id: "Store Values"
+  name: gcr.io/cloud-builders/curl
+  entrypoint: /bin/bash
+  args:
+    - -c 
+    - |
+      # store multiple values as environment variables
+      # name all values with a common prefix (we'll use "APIGEE")
+      if [ $BRANCH_NAME = "master" ] 
+      then
+        export APIGEE_PROFILE="ngsaas-test" &&
+      elif [ $BRANCH_NAME = "prod" ] 
+      then
+        export APIGEE_PROFILE="ngsaas-prod" &&
+      else
+        export APIGEE_PROFILE="ngsaas-dev" &&
+      fi
+
+      export APIGEE_PREFIX="" 
+
+      # write all "APIGEE" variables to the persistent volume "/workspace"
+      env | grep "^APIGEE" > /workspace/apigee_vars
+
+# move on to the next step; everything in the environment is discarded,
+# EXCEPT items on the "/workspace" mount
+
+- id: "Read Values"
+  name: gcr.io/cloud-builders/git
+  entrypoint: /bin/bash
+  args:
+    - -c
+    - |
+      # Read environment variables from disk
+      source /workspace/apigee_vars &&
+      
+      # All "APIGEE" values are now available in the environment of this step
+      echo "My profile is $APIGEE_PROFILE and my Prefix is $APIGEE_PREFIX"
