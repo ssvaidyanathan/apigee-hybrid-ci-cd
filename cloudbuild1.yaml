@@ -10,12 +10,12 @@ steps:
       #_TMP_BRANCH=`echo $BRANCH_NAME | sed -r 's,/,-,g'`
       if [ "$BRANCH_NAME" = "master" ]
       then
-        export APIGEE_PROFILE="ngsaas-test" &&
+        export APIGEE_PROFILE="ngsaas-test"
       #elif [ "$BRANCH_NAME" = "prod" ]
       #then
-        #export APIGEE_PROFILE="ngsaas-prod" &&
+        #export APIGEE_PROFILE="ngsaas-prod"
       else
-        export APIGEE_PROFILE="ngsaas-dev" &&
+        export APIGEE_PROFILE="ngsaas-dev"
       fi
 
       export APIGEE_PREFIX="" 
