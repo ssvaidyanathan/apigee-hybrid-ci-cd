@@ -7,8 +7,6 @@ steps:
     - |
       # store multiple values as environment variables
       # name all values with a common prefix (we'll use "APIGEE")
-      _TMP_BRANCH=`echo $BRANCH_NAME | sed -r 's,/,-,g'`
-      echo $_TMP_BRANCH
       if [ "$BRANCH_NAME" = "master" ]
       then
         export APIGEE_PROFILE="ngsaas-test"
@@ -34,7 +32,7 @@ steps:
     - -c
     - |
       # Read environment variables from disk
-      source /workspace/apigee_vars
+      source /workspace/apigee_vars &&
       
       # All "APIGEE" values are now available in the environment of this step
-      echo "My profile is $APIGEE_PROFILE and my Prefix is $APIGEE_PREFIX"
+      echo "My profile is $APIGEE_PROFILE and my Prefix is $APIGEE_PREFIX."
