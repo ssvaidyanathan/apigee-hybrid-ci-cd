@@ -1,0 +1,33 @@
+steps:
+- name: gcr.io/cloud-builders/gcloud
+  entrypoint: 'bash'
+  args: [ '-c', "gcloud secrets versions access latest --secret=apigee-org-admin --format='get(payload.data)' | tr '_-' '/+' | base64 -d > admin.json" ]
+- name: 'gcr.io/cloud-builders/npm'
+  args: ['install']
+- name: 'gcr.io/cloud-builders/nodejs/yarn'
+  entrypoint: 'bash'
+  args: ['-c', 'node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha test/unit']
+- name: 'gcr.io/cloud-builders/nodejs/yarn'
+  entrypoint: 'bash'
+  args: ['-c', 'node_modules/istanbul/lib/cli.js check-coverage']
+- name: 'gcr.io/cloud-builders/mvn'
+  entrypoint: 'bash'
+  args: ['-c', 'mvn -ntp test -P${_APIGEE_PROFILE} -Dorg=$PROJECT_ID -Ddeployment.suffix=${_APIGEE_PREFIX} -Dcommit=$COMMIT_SHA -Dbranch=$BRANCH_NAME -Duser.name=cloudbuild']
+- name: 'gcr.io/cloud-builders/mvn'
+  entrypoint: 'bash'
+  args: ['-c', 'mvn -ntp apigee-config:targetservers -P${_APIGEE_PROFILE} -Dorg=$PROJECT_ID -Ddeployment.suffix=${_APIGEE_PREFIX} -Dfile=admin.json']
+- name: 'gcr.io/cloud-builders/mvn'
+  entrypoint: 'bash'
+  args: ['-c', 'mvn -ntp apigee-enterprise:configure -P${_APIGEE_PROFILE} -Dorg=$PROJECT_ID -Ddeployment.suffix=${_APIGEE_PREFIX}']
+- name: 'gcr.io/cloud-builders/mvn'
+  entrypoint: 'bash'
+  args: ['-c', 'mvn -ntp apigee-enterprise:deploy -P${_APIGEE_PROFILE} -Dorg=$PROJECT_ID -Ddeployment.suffix=${_APIGEE_PREFIX} -Dfile=admin.json']
+  dir: '.'
+  secretEnv: ['PASSWORD', 'APIKEY']
+- name: 'gcr.io/cloud-builders/nodejs/yarn'
+  entrypoint: 'bash'
+  args: ['-c', 'node_modules/cucumber/bin/cucumber.js target/test/integration/features']
+
+substitutions:
+    _APIGEE_PROFILE: ngsaas_dev # default value
+    _APIGEE_PREFIX: cloudbuild # default value
