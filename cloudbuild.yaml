@@ -22,8 +22,6 @@ steps:
 - name: 'gcr.io/cloud-builders/mvn'
   entrypoint: 'bash'
   args: ['-c', 'mvn -ntp apigee-enterprise:deploy -P${_APIGEE_PROFILE} -Dorg=$PROJECT_ID -Ddeployment.suffix=${_APIGEE_PREFIX} -Dfile=admin.json']
-  dir: '.'
-  secretEnv: ['PASSWORD', 'APIKEY']
 - name: 'gcr.io/cloud-builders/nodejs/yarn'
   entrypoint: 'bash'
   args: ['-c', 'node_modules/cucumber/bin/cucumber.js target/test/integration/features']
