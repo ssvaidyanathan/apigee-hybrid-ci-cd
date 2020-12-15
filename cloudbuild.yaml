@@ -6,21 +6,21 @@ steps:
     - -c 
     - |
       # store multiple values as environment variables
-      # name all values with a common prefix (we'll use "APIGEE")
-      if [ $BRANCH_NAME = "master" ] 
+      # name all values with a common prefix (we'll use "build_")
+      if [ "$BRANCH_NAME" = "master" ]
       then
-        export APIGEE_PROFILE="ngsaas-test" &&
-      elif [ $BRANCH_NAME = "prod" ] 
+        export build_profile="ngsaas-test"
+      elif [ "$BRANCH_NAME" = "prod" ]
       then
-        export APIGEE_PROFILE="ngsaas-prod" &&
+        export build_profile="ngsaas-prod"
       else
-        export APIGEE_PROFILE="ngsaas-dev" &&
+        export build_profile="ngsaas-dev"
       fi
 
-      export APIGEE_PREFIX="" 
+      export build_prefix="" 
 
-      # write all "APIGEE" variables to the persistent volume "/workspace"
-      env | grep "^APIGEE" > /workspace/apigee_vars
+      # write all "build_" variables to the persistent volume "/workspace"
+      env | grep "^build_" > /workspace/build_vars
 - name: gcr.io/cloud-builders/gcloud
   id: fetch-credentials
   entrypoint: 'bash'
@@ -40,19 +40,19 @@ steps:
   id: 
   entrypoint: 'bash'
   id: process-resources
-  args: ['-c', source /workspace/apigee_vars && , 'mvn -f cloudbuild-pom.xml -ntp process-resources -P${APIGEE_PROFILE} -Dorg=$PROJECT_ID -Ddeployment.suffix=${APIGEE_PREFIX} -Dcommit=$COMMIT_SHA -Dbranch=$BRANCH_NAME -Duser.name=cloudbuild']
+  args: ['-c', source /workspace/build_vars && , 'mvn -f cloudbuild-pom.xml -ntp process-resources -P${build_profile} -Dorg=$PROJECT_ID -Ddeployment.suffix=${build_prefix} -Dcommit=$COMMIT_SHA -Dbranch=$BRANCH_NAME -Duser.name=cloudbuild']
 - name: 'gcr.io/cloud-builders/mvn'
   id: pre-deployment-configurations
   entrypoint: 'bash'
-  args: ['-c', source /workspace/apigee_vars &&, 'mvn -f cloudbuild-pom.xml -ntp apigee-config:targetservers -P${APIGEE_PROFILE} -Dorg=$PROJECT_ID -Ddeployment.suffix=${APIGEE_PREFIX} -Dfile=admin.json']
+  args: ['-c', source /workspace/build_vars &&, 'mvn -f cloudbuild-pom.xml -ntp apigee-config:targetservers -P${build_profile} -Dorg=$PROJECT_ID -Ddeployment.suffix=${build_prefix} -Dfile=admin.json']
 - name: 'gcr.io/cloud-builders/mvn'
   id: package
   entrypoint: 'bash'
-  args: ['-c', source /workspace/apigee_vars &&, 'mvn -f cloudbuild-pom.xml -ntp apigee-enterprise:configure -P${APIGEE_PROFILE} -Dorg=$PROJECT_ID -Ddeployment.suffix=${APIGEE_PREFIX}']
+  args: ['-c', source /workspace/build_vars &&, 'mvn -f cloudbuild-pom.xml -ntp apigee-enterprise:configure -P${build_profile} -Dorg=$PROJECT_ID -Ddeployment.suffix=${build_prefix}']
 - name: 'gcr.io/cloud-builders/mvn'
   id: deploy
   entrypoint: 'bash'
-  args: ['-c', source /workspace/apigee_vars &&, 'mvn -f cloudbuild-pom.xml -ntp apigee-enterprise:deploy -P${APIGEE_PROFILE} -Dorg=$PROJECT_ID -Ddeployment.suffix=${APIGEE_PREFIX} -Dfile=admin.json']
+  args: ['-c', source /workspace/build_vars &&, 'mvn -f cloudbuild-pom.xml -ntp apigee-enterprise:deploy -P${build_profile} -Dorg=$PROJECT_ID -Ddeployment.suffix=${build_prefix} -Dfile=admin.json']
 - name: 'gcr.io/cloud-builders/nodejs/yarn'
   id: functional-testing
   entrypoint: 'bash'
