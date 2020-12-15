@@ -1,13 +1,14 @@
 steps:
 - id: "Store Values"
-  name: ubuntu
+  name: gcr.io/cloud-builders/git
   entrypoint: /bin/bash
   args:
     - -c 
     - |
       # store multiple values as environment variables
       # name all values with a common prefix (we'll use "APIGEE")
-      #_TMP_BRANCH=`echo $BRANCH_NAME | sed -r 's,/,-,g'`
+      _TMP_BRANCH=`echo $BRANCH_NAME | sed -r 's,/,-,g'`
+      echo $_TMP_BRANCH
       if [ "$BRANCH_NAME" = "master" ]
       then
         export APIGEE_PROFILE="ngsaas-test"
@@ -22,7 +23,7 @@ steps:
 
       # write all "APIGEE" variables to the persistent volume "/workspace"
       env | grep "^APIGEE" > /workspace/apigee_vars
-
+      cat /workspace/apigee_vars
 # move on to the next step; everything in the environment is discarded,
 # EXCEPT items on the "/workspace" mount
 
