@@ -6,22 +6,22 @@ steps:
     - -c 
     - |
       # store multiple values as environment variables
-      # name all values with a common prefix (we'll use "APIGEE")
+      # name all values with a common prefix (we'll use "build_")
       if [ "$BRANCH_NAME" = "master" ]
       then
-        export APIGEE_PROFILE="ngsaas-test"
+        export build_profile="ngsaas-test"
       elif [ "$BRANCH_NAME" = "prod" ]
       then
-        export APIGEE_PROFILE="ngsaas-prod"
+        export build_profile="ngsaas-prod"
       else
-        export APIGEE_PROFILE="ngsaas-dev"
+        export build_profile="ngsaas-dev"
       fi
 
-      export APIGEE_PREFIX="" 
+      export build_prefix="" 
 
-      # write all "APIGEE" variables to the persistent volume "/workspace"
-      env | grep "^APIGEE" > /workspace/apigee_vars
-      cat /workspace/apigee_vars
+      # write all "build_" variables to the persistent volume "/workspace"
+      env | grep "^build_" > /workspace/build_vars
+      cat /workspace/build_vars
 # move on to the next step; everything in the environment is discarded,
 # EXCEPT items on the "/workspace" mount
 
@@ -32,7 +32,7 @@ steps:
     - -c
     - |
       # Read environment variables from disk
-      source /workspace/apigee_vars &&
+      source /workspace/build_vars &&
       
-      # All "APIGEE" values are now available in the environment of this step
-      echo "My profile is $APIGEE_PROFILE and my Prefix is $APIGEE_PREFIX."
+      # All "build_" values are now available in the environment of this step
+      echo "My profile is $build_profile and my Prefix is $build_prefix."
