@@ -7,10 +7,10 @@ steps:
     - |
       # store multiple values as environment variables
       # name all values with a common prefix (we'll use "APIGEE")
-      if [ $BRANCH_NAME eq "master" ] 
+      if [ "$BRANCH_NAME" = "master" ] 
       then
         export APIGEE_PROFILE="ngsaas-test" &&
-      elif [ $BRANCH_NAME eq "prod" ] 
+      elif [ "$BRANCH_NAME" = "prod" ] 
       then
         export APIGEE_PROFILE="ngsaas-prod" &&
       else
