@@ -37,10 +37,19 @@ steps:
   entrypoint: 'bash'
   args: ['-c', 'node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha test/unit']
 - name: 'gcr.io/cloud-builders/mvn'
-  id: 
-  entrypoint: 'bash'
   id: process-resources
-  args: ['-c', source /workspace/build_vars && , 'mvn -f cloudbuild-pom.xml -ntp process-resources -P${build_profile} -Dorg=$PROJECT_ID -Ddeployment.suffix=${build_prefix} -Dcommit=$COMMIT_SHA -Dbranch=$BRANCH_NAME -Duser.name=cloudbuild']
+  entrypoint: 'bash'
+  args:
+    - -c 
+    - |
+      # Read environment variables from disk
+      source /workspace/build_vars &&
+      mvn -f cloudbuild-pom.xml -ntp process-resources -P${build_profile} -Dorg=$PROJECT_ID -Ddeployment.suffix=${build_prefix} -Dcommit=$COMMIT_SHA -Dbranch=$BRANCH_NAME -Duser.name=cloudbuild
+#- name: 'gcr.io/cloud-builders/mvn'
+  #id: 
+  #entrypoint: 'bash'
+  #id: process-resources
+  #args: ['-c', source /workspace/build_vars && , 'mvn -f cloudbuild-pom.xml -ntp process-resources -P${build_profile} -Dorg=$PROJECT_ID -Ddeployment.suffix=${build_prefix} -Dcommit=$COMMIT_SHA -Dbranch=$BRANCH_NAME -Duser.name=cloudbuild']
 - name: 'gcr.io/cloud-builders/mvn'
   id: pre-deployment-configurations
   entrypoint: 'bash'
