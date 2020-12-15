@@ -6,22 +6,25 @@ steps:
   args: ['install']
 - name: 'gcr.io/cloud-builders/nodejs/yarn'
   entrypoint: 'bash'
+  args: ['-c', 'node_modules/apigeelint/cli.js -s . -f table.js']
+- name: 'gcr.io/cloud-builders/nodejs/yarn'
+  entrypoint: 'bash'
   args: ['-c', 'node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha test/unit']
 - name: 'gcr.io/cloud-builders/nodejs/yarn'
   entrypoint: 'bash'
   args: ['-c', 'node_modules/istanbul/lib/cli.js check-coverage']
 - name: 'gcr.io/cloud-builders/mvn'
   entrypoint: 'bash'
-  args: ['-c', 'mvn -ntp test -P${_APIGEE_PROFILE} -Dorg=$PROJECT_ID -Ddeployment.suffix=${_APIGEE_PREFIX} -Dcommit=$COMMIT_SHA -Dbranch=$BRANCH_NAME -Duser.name=cloudbuild']
+  args: ['-c', 'mvn -f cloudbuild-pom.xml -ntp test -P${_APIGEE_PROFILE} -Dorg=$PROJECT_ID -Ddeployment.suffix=${_APIGEE_PREFIX} -Dcommit=$COMMIT_SHA -Dbranch=$BRANCH_NAME -Duser.name=cloudbuild']
 - name: 'gcr.io/cloud-builders/mvn'
   entrypoint: 'bash'
-  args: ['-c', 'mvn -ntp apigee-config:targetservers -P${_APIGEE_PROFILE} -Dorg=$PROJECT_ID -Ddeployment.suffix=${_APIGEE_PREFIX} -Dfile=admin.json']
+  args: ['-c', 'mvn -f cloudbuild-pom.xml -ntp apigee-config:targetservers -P${_APIGEE_PROFILE} -Dorg=$PROJECT_ID -Ddeployment.suffix=${_APIGEE_PREFIX} -Dfile=admin.json']
 - name: 'gcr.io/cloud-builders/mvn'
   entrypoint: 'bash'
-  args: ['-c', 'mvn -ntp apigee-enterprise:configure -P${_APIGEE_PROFILE} -Dorg=$PROJECT_ID -Ddeployment.suffix=${_APIGEE_PREFIX}']
+  args: ['-c', 'mvn -f cloudbuild-pom.xml -ntp apigee-enterprise:configure -P${_APIGEE_PROFILE} -Dorg=$PROJECT_ID -Ddeployment.suffix=${_APIGEE_PREFIX}']
 - name: 'gcr.io/cloud-builders/mvn'
   entrypoint: 'bash'
-  args: ['-c', 'mvn -ntp apigee-enterprise:deploy -P${_APIGEE_PROFILE} -Dorg=$PROJECT_ID -Ddeployment.suffix=${_APIGEE_PREFIX} -Dfile=admin.json']
+  args: ['-c', 'mvn -f cloudbuild-pom.xml -ntp apigee-enterprise:deploy -P${_APIGEE_PROFILE} -Dorg=$PROJECT_ID -Ddeployment.suffix=${_APIGEE_PREFIX} -Dfile=admin.json']
 - name: 'gcr.io/cloud-builders/nodejs/yarn'
   entrypoint: 'bash'
   args: ['-c', 'node_modules/cucumber/bin/cucumber.js target/test/integration/features']

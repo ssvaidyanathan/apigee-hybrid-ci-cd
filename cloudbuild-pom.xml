@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>apigee</groupId>
+	<artifactId>currency</artifactId>
+	<version>v1</version>
+	<name>currency-${deployment.suffix}v1</name>
+	<packaging>pom</packaging>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>central</id>
+			<name>Maven Plugin Repository</name>
+			<url>https://repo1.maven.org/maven2</url>
+			<layout>default</layout>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<releases>
+				<updatePolicy>never</updatePolicy>
+			</releases>
+		</pluginRepository>
+	</pluginRepositories>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<org.slf4j.simpleLogger.defaultLogLevel>info</org.slf4j.simpleLogger.defaultLogLevel>
+		<project.root.dir>${basedir}</project.root.dir>
+		<target.root.dir>${basedir}/target</target.root.dir>
+		<deployment.suffix>${user.name}</deployment.suffix>
+		<commit></commit>
+		<branch>a local</branch>
+	</properties>
+
+	<!-- This is where you add the environment specific properties under various profile names -->
+	<!-- For apigee.options, refer to "Advanced Configuration Options" under https://github.com/apigee/apigee-deploy-maven-plugin#pom-xml-sample -->
+	<profiles>
+		<profile>
+			<id>test</id>
+			<properties>
+				<apigee.profile>test</apigee.profile>
+				<apigee.env>test</apigee.env>
+				<apigee.hosturl>https://apigee.googleapis.com</apigee.hosturl>
+				<apigee.apiversion>v1</apigee.apiversion>
+				<apigee.org>${org}</apigee.org>
+				<apigee.options>override</apigee.options> <!-- overrides is default and the only option -->
+				<apigee.bearer>${bearer}</apigee.bearer> <!-- this takes precedence over service account file -->
+				<apigee.serviceaccount.file>${file}</apigee.serviceaccount.file>
+				<apigee.config.options>update</apigee.config.options>
+				<apigee.config.dir>./target/resources/edge</apigee.config.dir>
+				<api.northbound.domain>amer-cs-hybrid-demo2-test.hybrid-apigee.net</api.northbound.domain>
+				<api.testtag>~@wip</api.testtag>
+			</properties>
+		</profile>
+		<profile>
+			<id>prod</id>
+			<properties>
+				<apigee.profile>prod</apigee.profile>
+				<apigee.env>prod</apigee.env>
+				<apigee.hosturl>https://apigee.googleapis.com</apigee.hosturl>
+				<apigee.apiversion>v1</apigee.apiversion>
+				<apigee.org>${org}</apigee.org>
+				<apigee.options>override</apigee.options> <!-- overrides is default and the only option -->
+				<apigee.bearer>${bearer}</apigee.bearer> <!-- this takes precedence over service account file -->
+				<apigee.serviceaccount.file>${file}</apigee.serviceaccount.file>
+				<apigee.config.options>update</apigee.config.options>
+				<apigee.config.dir>./target/resources/edge</apigee.config.dir>
+				<api.northbound.domain>amer-cs-hybrid-demo2-test.hybrid-apigee.net</api.northbound.domain>
+				<api.testtag>~@wip,~@mock</api.testtag>
+			</properties>
+		</profile>
+		<profile>
+			<id>ngsaas-dev</id>
+			<properties>
+				<apigee.profile>ngsaas-dev</apigee.profile>
+				<apigee.env>default-dev</apigee.env>
+				<apigee.hosturl>https://apigee.googleapis.com</apigee.hosturl>
+				<apigee.apiversion>v1</apigee.apiversion>
+				<apigee.org>${org}</apigee.org>
+				<apigee.options>override</apigee.options> <!-- overrides is default and the only option -->
+				<apigee.bearer>${bearer}</apigee.bearer> <!-- this takes precedence over service account file -->
+				<apigee.serviceaccount.file>${file}</apigee.serviceaccount.file>
+				<apigee.config.dir>./target/resources/edge</apigee.config.dir>
+				<apigee.config.options>update</apigee.config.options>
+				<api.northbound.domain>api-dev.ssvaidyanathan.com</api.northbound.domain>
+				<api.testtag>~@wip,~@mock</api.testtag>
+			</properties>
+		</profile>
+		<profile>
+			<id>ngsaas-test</id>
+			<properties>
+				<apigee.profile>ngsaas-test</apigee.profile>
+				<apigee.env>default-test</apigee.env>
+				<apigee.hosturl>https://apigee.googleapis.com</apigee.hosturl>
+				<apigee.apiversion>v1</apigee.apiversion>
+				<apigee.org>${org}</apigee.org>
+				<apigee.options>override</apigee.options> <!-- overrides is default and the only option -->
+				<apigee.bearer>${bearer}</apigee.bearer> <!-- this takes precedence over service account file -->
+				<apigee.serviceaccount.file>${file}</apigee.serviceaccount.file>
+				<apigee.config.dir>./target/resources/edge</apigee.config.dir>
+				<apigee.config.options>update</apigee.config.options>
+				<api.northbound.domain>api-test.ssvaidyanathan.com</api.northbound.domain>
+				<api.testtag>~@wip,~@mock</api.testtag>
+			</properties>
+		</profile>
+		<profile>
+			<id>ngsaas-prod</id>
+			<properties>
+				<apigee.profile>ngsaas-prod</apigee.profile>
+				<apigee.env>default-prod</apigee.env>
+				<apigee.hosturl>https://apigee.googleapis.com</apigee.hosturl>
+				<apigee.apiversion>v1</apigee.apiversion>
+				<apigee.org>${org}</apigee.org>
+				<apigee.options>override</apigee.options> <!-- overrides is default and the only option -->
+				<apigee.bearer>${bearer}</apigee.bearer> <!-- this takes precedence over service account file -->
+				<apigee.serviceaccount.file>${file}</apigee.serviceaccount.file>
+				<apigee.config.dir>./target/resources/edge</apigee.config.dir>
+				<apigee.config.options>update</apigee.config.options>
+				<api.northbound.domain>api-prod.ssvaidyanathan.com</api.northbound.domain>
+				<api.testtag>~@wip,~@mock</api.testtag>
+			</properties>
+		</profile>
+	</profiles>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>io.apigee.build-tools.enterprise4g</groupId>
+					<artifactId>apigee-edge-maven-plugin</artifactId>
+					<version>2.0.4</version>
+				</plugin>
+				<plugin>
+					<groupId>com.apigee.edge.config</groupId>
+				    <artifactId>apigee-config-maven-plugin</artifactId>
+				    <version>2.0.1</version>
+			    </plugin>
+			</plugins>
+		</pluginManagement>
+
+		<plugins>
+
+			<!-- run jslint -->
+			<plugin>
+				<groupId>com.cj.jshintmojo</groupId>
+				<artifactId>jshint-maven-plugin</artifactId>
+				<version>1.6.0</version>
+				<executions>
+					<execution>
+						<id>jslint</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>lint</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<version>2.4.3</version>
+					<directories>
+						<directory>apiproxy/resources/jsc</directory>
+					</directories>
+					<reporter>checkstyle</reporter>
+					<reportFile>target/jshint.html</reportFile>
+				</configuration>
+			</plugin>
+
+			<!-- copy the full apiproxy folder to target folder -->
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.6</version>
+				<executions>
+					<execution>
+						<id>copy-resources</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<overwrite>true</overwrite>
+							<resources>
+								<resource>
+									<!--source -->
+									<directory>${project.root.dir}</directory>
+									<filtering>true</filtering>
+									<includes>
+										<include>apiproxy/**</include>
+										<include>test/integration/**</include>
+										<include>resources/**</include>
+									</includes>
+								</resource>
+							</resources>
+							<!--target -->
+							<outputDirectory>${target.root.dir}</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>com.google.code.maven-replacer-plugin</groupId>
+				<artifactId>replacer</artifactId>
+				<version>1.5.2</version>
+				<executions>
+					<execution>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>replace</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<basedir>${target.root.dir}</basedir>
+					<includes>
+						<include>apiproxy/proxies/default.xml</include>
+						<include>apiproxy/proxies/loggly.xml</include>
+						<include>apiproxy/currency-v1.xml</include>
+						<include>resources/edge/org/apiProducts.json</include>
+						<include>test/integration/test-config.json</include>
+					</includes>
+					<replacements>
+						<replacement>
+							<token>/currency/v1</token>
+							<value>/currency/${deployment.suffix}v1</value>
+						</replacement>
+						<replacement>
+							<token>demo-test.apigee.net</token>
+							<value>${api.northbound.domain}</value>
+						</replacement>
+						<replacement>
+							<token>@description</token>
+							<value>commit ${commit} from ${branch} branch. Deployed by ${user.name}</value>
+						</replacement>
+						<replacement>
+							<token>env-name</token>
+							<value>${apigee.env}</value>
+						</replacement>
+						<replacement>
+							<token>proxy-name</token>
+							<value>currency-${deployment.suffix}v1</value>
+						</replacement>
+					</replacements>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>io.apigee.build-tools.enterprise4g</groupId>
+				<artifactId>apigee-edge-maven-plugin</artifactId>
+				<version>2.0.4</version>
+				<executions>
+					<execution>
+						<id>configure-bundle-step</id>
+						<phase>package</phase>
+						<goals>
+							<goal>configure</goal>
+						</goals>
+					</execution>
+					<!--deploy bundle -->
+					<execution>
+						<id>deploy-bundle-step</id>
+						<phase>install</phase>
+						<goals>
+							<goal>deploy</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+			    <groupId>com.apigee.edge.config</groupId>
+			    <artifactId>apigee-config-maven-plugin</artifactId>
+			    <version>2.0.1</version>
+			    <executions>
+			    	<execution>
+			            <id>create-config-keyvaluemaps</id>
+			            <phase>package</phase>                        
+			            <goals>
+			                <goal>keyvaluemaps</goal>
+			            </goals>
+			        </execution>
+			        <execution>
+			            <id>create-config-resourcefiles</id>
+			            <phase>package</phase>                        
+			            <goals>
+			                <goal>resourcefiles</goal>
+			            </goals>
+			        </execution>
+			        <execution>
+			            <id>create-config-targetservers</id>
+			            <phase>package</phase>                        
+			            <goals>
+			                <goal>targetservers</goal>
+			            </goals>
+			        </execution>
+			        <execution>
+			            <id>create-config-apiproducts</id>
+			            <phase>install</phase>                        
+			            <goals>
+			                <goal>apiproducts</goal>
+			            </goals>
+			        </execution>
+			        <execution>
+			            <id>create-config-developers</id>
+			            <phase>install</phase>                        
+			            <goals>
+			                <goal>developers</goal>
+			            </goals>
+			        </execution>
+			        <execution>
+			            <id>create-config-apps</id>
+			            <phase>install</phase>                        
+			            <goals>
+			                <goal>apps</goal>
+			            </goals>
+			        </execution>
+			    </executions>
+			</plugin> 
+		</plugins>
+	</build>
+
+</project>
