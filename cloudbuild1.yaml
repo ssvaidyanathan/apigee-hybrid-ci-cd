@@ -1,17 +1,17 @@
 steps:
 - id: "Store Values"
-  name: gcr.io/cloud-builders/curl
+  name: ubuntu
   entrypoint: /bin/bash
   args:
     - -c 
     - |
       # store multiple values as environment variables
       # name all values with a common prefix (we'll use "APIGEE")
-      _TMP_BRANCH=`echo $BRANCH_NAME | sed -r 's,/,-,g'`
-      if [ "$_TMP_BRANCH" = "master" ]
+      #_TMP_BRANCH=`echo $BRANCH_NAME | sed -r 's,/,-,g'`
+      if [ "$BRANCH_NAME" = "master" ]
       then
         export APIGEE_PROFILE="ngsaas-test" &&
-      elif [ "$_TMP_BRANCH" = "prod" ]
+      elif [ "$BRANCH_NAME" = "prod" ]
       then
         export APIGEE_PROFILE="ngsaas-prod" &&
       else
