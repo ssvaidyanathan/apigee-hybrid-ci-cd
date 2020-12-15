@@ -1,5 +1,6 @@
 steps:
 - name: gcr.io/cloud-builders/gcloud
+  id: fetch-credentials
   entrypoint: 'bash'
   args: [ '-c', "gcloud secrets versions access latest --secret=apigee-org-admin --format='get(payload.data)' | tr '_-' '/+' | base64 -d > admin.json" ]
 - name: 'gcr.io/cloud-builders/npm'
