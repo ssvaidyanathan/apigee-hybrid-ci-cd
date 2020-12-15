@@ -1,7 +1,7 @@
 steps:
-- id: variables
-  name: gcr.io/cloud-builders/gcloud
-  entrypoint: /bin/bash
+- name: gcr.io/cloud-builders/git
+  id: variables
+  entrypoint: 'bash'
   args:
     - -c 
     - |
@@ -21,7 +21,6 @@ steps:
 
       # write all "APIGEE" variables to the persistent volume "/workspace"
       env | grep "^APIGEE" > /workspace/apigee_vars
-
 - name: gcr.io/cloud-builders/gcloud
   id: fetch-credentials
   entrypoint: 'bash'
