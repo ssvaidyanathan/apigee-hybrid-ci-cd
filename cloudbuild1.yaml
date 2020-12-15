@@ -11,12 +11,12 @@ steps:
       echo $_TMP_BRANCH
       if [ "$BRANCH_NAME" = "master" ]
       then
-        export APIGEE_PROFILE="ngsaas-test" &&
-      #elif [ "$BRANCH_NAME" = "prod" ]
-      #then
-        #export APIGEE_PROFILE="ngsaas-prod" &&
+        export APIGEE_PROFILE="ngsaas-test"
+      elif [ "$BRANCH_NAME" = "prod" ]
+      then
+        export APIGEE_PROFILE="ngsaas-prod"
       else
-        export APIGEE_PROFILE="ngsaas-dev" &&
+        export APIGEE_PROFILE="ngsaas-dev"
       fi
 
       export APIGEE_PREFIX="" 
@@ -34,7 +34,7 @@ steps:
     - -c
     - |
       # Read environment variables from disk
-      source /workspace/apigee_vars &&
+      source /workspace/apigee_vars
       
       # All "APIGEE" values are now available in the environment of this step
       echo "My profile is $APIGEE_PROFILE and my Prefix is $APIGEE_PREFIX"
