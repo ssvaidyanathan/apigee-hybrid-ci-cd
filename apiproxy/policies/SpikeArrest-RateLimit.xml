@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<SpikeArrest async="false" continueOnError="false" enabled="true" name="SpikeArrest-RateLimit">
-    <DisplayName>SpikeArrest-RateLimit</DisplayName>
-    <Properties/>
-    <Rate ref="propertyset.global.ratelimit">30ps</Rate>
-</SpikeArrest>
