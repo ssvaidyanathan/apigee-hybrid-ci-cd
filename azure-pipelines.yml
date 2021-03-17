@@ -1,0 +1,64 @@
+# Apigee pipeline
+
+trigger:
+- feature/*
+- master
+- prod
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+
+- task: NodeTool@0
+  inputs:
+    versionSpec: '10.23.1'
+
+- task: DownloadSecureFile@1
+  name: mySecureFile
+  displayName: 'Download config.json'
+  inputs:
+    secureFile: 'config.json'
+
+# Set variables
+- bash: |
+    echo "##vso[task.setvariable variable=APIGEE_ORG]ssv-apigee-ngsaas-project2"
+    if [ "$(Build.SourceBranchName)" = "master" ]
+    then
+      echo "##vso[task.setvariable variable=APIGEE_PROFILE]test"
+      echo "##vso[task.setvariable variable=APIGEE_DOMAIN]api-test.ssvaidyanathan.com"
+    elif [ "$(Build.SourceBranchName)" = "prod" ]
+    then
+      echo "##vso[task.setvariable variable=APIGEE_PROFILE]prod"
+      echo "##vso[task.setvariable variable=APIGEE_DOMAIN]api-prod.ssvaidyanathan.com"
+    else
+      echo "##vso[task.setvariable variable=APIGEE_PROFILE]dev"
+      echo "##vso[task.setvariable variable=APIGEE_DOMAIN]api-dev.ssvaidyanathan.com"
+    fi
+    mvn clean
+  displayName: 'Clean'
+
+- bash: |
+    mvn -ntp test -P$(APIGEE_PROFILE) -Dorg=$(APIGEE_ORG) -Ddeployment.suffix="" -Dapi.northbound.domain=$(APIGEE_DOMAIN) -Dcommit=$(Build.SourceVersion) -Dbranch=$(Build.SourceBranchName) -Duser.name=azureops
+  displayName: 'Static Code Analysis, Unit Test and Coverage'
+
+- bash: |
+    mvn apigee-config:targetservers -P$(APIGEE_PROFILE) -Ddeployment.suffix="" -Dorg=$(APIGEE_ORG) -Dapi.northbound.domain=$(APIGEE_DOMAIN) -Dfile=$(mySecureFile.secureFilePath)
+  displayName: 'Pre-deployment configuration'
+
+- bash: |
+    mvn -ntp apigee-enterprise:configure -P$(APIGEE_PROFILE) -Ddeployment.suffix="" -Dorg=$(APIGEE_ORG) -Dapi.northbound.domain=$(APIGEE_DOMAIN) -Dfile=$(mySecureFile.secureFilePath)
+  displayName: 'Package proxy bundle'
+
+- bash: |
+    mvn -ntp apigee-enterprise:deploy -P$(APIGEE_PROFILE) -Ddeployment.suffix="" -Dorg=$(APIGEE_ORG) -Dapi.northbound.domain=$(APIGEE_DOMAIN) -Dfile=$(mySecureFile.secureFilePath)
+  displayName: 'Deploy proxy bundle'
+
+- bash: |
+    mvn -ntp apigee-config:apiproducts apigee-config:developers apigee-config:apps -P$(APIGEE_PROFILE) -Ddeployment.suffix="" -Dorg=$(APIGEE_ORG) -Dapi.northbound.domain=$(APIGEE_DOMAIN) -Dfile=$(mySecureFile.secureFilePath)
+  displayName: 'Post-deployment configuration'
+
+- bash: |
+    node ./node_modules/cucumber/bin/cucumber.js target/test/integration/features --format json:target/reports.json
+  displayName: 'Functional Test'
+
