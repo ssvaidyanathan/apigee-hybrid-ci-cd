@@ -129,41 +129,17 @@
 				<plugin>
 					<groupId>io.apigee.build-tools.enterprise4g</groupId>
 					<artifactId>apigee-edge-maven-plugin</artifactId>
-					<version>2.1.0</version>
+					<version>2.1.1</version>
 				</plugin>
 				<plugin>
 					<groupId>com.apigee.edge.config</groupId>
 				    <artifactId>apigee-config-maven-plugin</artifactId>
-				    <version>2.1.0</version>
+				    <version>2.1.1</version>
 			    </plugin>
 			</plugins>
 		</pluginManagement>
 
 		<plugins>
-
-			<!-- run jslint -->
-			<plugin>
-				<groupId>com.cj.jshintmojo</groupId>
-				<artifactId>jshint-maven-plugin</artifactId>
-				<version>1.6.0</version>
-				<executions>
-					<execution>
-						<id>jslint</id>
-						<phase>validate</phase>
-						<goals>
-							<goal>lint</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<version>2.4.3</version>
-					<directories>
-						<directory>apiproxy/resources/jsc</directory>
-					</directories>
-					<reporter>checkstyle</reporter>
-					<reportFile>target/jshint.html</reportFile>
-				</configuration>
-			</plugin>
 
 			<!-- copy the full apiproxy folder to target folder -->
 			<plugin>
@@ -246,7 +222,7 @@
 			<plugin>
 				<groupId>io.apigee.build-tools.enterprise4g</groupId>
 				<artifactId>apigee-edge-maven-plugin</artifactId>
-				<version>2.0.4</version>
+				<version>2.1.1</version>
 				<executions>
 					<execution>
 						<id>configure-bundle-step</id>
@@ -269,7 +245,7 @@
 			<plugin>
 			    <groupId>com.apigee.edge.config</groupId>
 			    <artifactId>apigee-config-maven-plugin</artifactId>
-			    <version>2.0.1</version>
+			    <version>2.1.1</version>
 			    <executions>
 			    	<execution>
 			            <id>create-config-keyvaluemaps</id>
