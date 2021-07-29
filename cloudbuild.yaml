@@ -29,13 +29,13 @@ steps:
   id: install-npm-modules
   args: ['install']
 - name: 'gcr.io/cloud-builders/nodejs/yarn'
-  id: apigee-lint
+  id: lint
   entrypoint: 'bash'
-  args: ['-c', 'node_modules/apigeelint/cli.js -s . -f table.js']
+  args: ['-c', 'npm run lint']
 - name: 'gcr.io/cloud-builders/nodejs/yarn'
   id: unit-testing-and-code-coverage
   entrypoint: 'bash'
-  args: ['-c', 'node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha test/unit']
+  args: ['-c', 'npm run unit-test']
 - name: 'gcr.io/cloud-builders/mvn'
   id: process-resources
   entrypoint: 'bash'
@@ -75,5 +75,5 @@ steps:
 - name: 'gcr.io/cloud-builders/nodejs/yarn'
   id: functional-testing
   entrypoint: 'bash'
-  args: ['-c', 'node_modules/cucumber/bin/cucumber.js target/test/integration/features']
+  args: ['-c', 'npm run integration-test']
 
