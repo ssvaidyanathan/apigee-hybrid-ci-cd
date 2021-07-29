@@ -23,21 +23,21 @@ var contextGetVariableMethod,
 	requestConstr;
 
 beforeEach(function() {
-	GLOBAL.context = {
+	global.context = {
 		getVariable: function(s) {},
 		setVariable: function(a, b) {}
 	};
 
-	GLOBAL.httpClient = {
+	global.httpClient = {
 		send: function(s) {}
 	};
 
-	GLOBAL.Request = function(s) {};
+	global.Request = function(s) {};
 
-	contextGetVariableMethod = sinon.stub(GLOBAL.context, 'getVariable');
-	contextSetVariableMethod = sinon.spy(GLOBAL.context, 'setVariable');
+	contextGetVariableMethod = sinon.stub(global.context, 'getVariable');
+	contextSetVariableMethod = sinon.spy(global.context, 'setVariable');
 	httpClientSendMethod = sinon.stub(httpClient, 'send');
-	requestConstr = sinon.spy(GLOBAL, 'Request');
+	requestConstr = sinon.spy(global, 'Request');
 
 });
 
