@@ -28,7 +28,7 @@ steps:
 - name: node:12
   id: install-npm-modules
   entrypoint: npm
-  args: ['install']
+  args: ['install', '--silent', '--no-fund']
 - name: node:12
   id: lint
   entrypoint: npm
@@ -45,7 +45,7 @@ steps:
     - |
       # Read environment variables from disk
       source /workspace/build_vars &&
-      mvn -ntp process-resources -P${build_profile} -Dorg=$PROJECT_ID -Ddeployment.suffix=${build_prefix} -Dcommit=$COMMIT_SHA -Dbranch=$BRANCH_NAME -Duser.name=cloudbuild
+      mvn -f cloudbuild-pom.xml -ntp process-resources -P${build_profile} -Dorg=$PROJECT_ID -Ddeployment.suffix=${build_prefix} -Dcommit=$COMMIT_SHA -Dbranch=$BRANCH_NAME -Duser.name=cloudbuild
 - name: 'gcr.io/cloud-builders/mvn'
   id: pre-deployment-configurations
   entrypoint: 'bash'
@@ -54,7 +54,7 @@ steps:
     - |
       # Read environment variables from disk
       source /workspace/build_vars &&
-      mvn -ntp apigee-config:targetservers -P${build_profile} -Dorg=$PROJECT_ID -Ddeployment.suffix=${build_prefix} -Dfile=admin.json
+      mvn -f cloudbuild-pom.xml -ntp apigee-config:targetservers -P${build_profile} -Dorg=$PROJECT_ID -Ddeployment.suffix=${build_prefix} -Dfile=admin.json
 - name: 'gcr.io/cloud-builders/mvn'
   id: package
   entrypoint: 'bash'
@@ -63,7 +63,7 @@ steps:
     - |
       # Read environment variables from disk
       source /workspace/build_vars &&
-      mvn -ntp apigee-enterprise:configure -P${build_profile} -Dorg=$PROJECT_ID -Ddeployment.suffix=${build_prefix}
+      mvn -f cloudbuild-pom.xml -ntp apigee-enterprise:configure -P${build_profile} -Dorg=$PROJECT_ID -Ddeployment.suffix=${build_prefix}
 - name: 'gcr.io/cloud-builders/mvn'
   id: deploy
   entrypoint: 'bash'
@@ -72,7 +72,7 @@ steps:
     - |
       # Read environment variables from disk
       source /workspace/build_vars &&
-      mvn -ntp apigee-enterprise:deploy -P${build_profile} -Dorg=$PROJECT_ID -Ddeployment.suffix=${build_prefix} -Dfile=admin.json
+      mvn -f cloudbuild-pom.xml -ntp apigee-enterprise:deploy -P${build_profile} -Dorg=$PROJECT_ID -Ddeployment.suffix=${build_prefix} -Dfile=admin.json
 - name: node:12
   id: functional-test
   entrypoint: npm
