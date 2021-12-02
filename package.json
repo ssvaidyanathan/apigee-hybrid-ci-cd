@@ -19,8 +19,8 @@
 	"scripts": {
 		"lint": "npm run eslint && npm run apigeelint",
 		"eslint": "eslint -c .eslintrc-jsc.yml --format json",
-		"apigeelint": "apigeelint -s apiproxy -f table.js -e PO013,PO025",
-		"unit-test": "nyc mocha --recursive \"./test/unit/*.js\"",
+		"apigeelint": "apigeelint -s apiproxy -f html.js -e PO013,PO025",
+		"unit-test": "nyc --reporter=html mocha --recursive \"./test/unit/*.js\"",
 		"integration-test": "cucumber-js ./target/test/integration --publish-quiet -f @cucumber/pretty-formatter"
 	}
 }
