@@ -18,27 +18,28 @@ steps:
       fi
 
       export build_prefix="" 
+      export build_token=\"$(gcloud auth application-default print-access-token)\"
 
       # write all "build_" variables to the persistent volume "/workspace"
       env | grep "^build_" > /workspace/build_vars
-- name: gcr.io/cloud-builders/gcloud
-  id: fetch-credentials
-  entrypoint: 'bash'
-  args: [ '-c', "gcloud secrets versions access latest --secret=apigee-org-admin --format='get(payload.data)' | tr '_-' '/+' | base64 -d > admin.json" ]
+#- name: gcr.io/cloud-builders/gcloud
+#  id: fetch-credentials
+#  entrypoint: 'bash'
+#  args: [ '-c', "gcloud secrets versions access latest --secret=apigee-org-admin --format='get(payload.data)' | tr '_-' '/+' | base64 -d > admin.json" ]
 - name: node:12
-  id: install-npm-modules
+  id: "Install Dependencies"
   entrypoint: npm
   args: ['install', '--silent', '--no-fund']
 - name: node:12
-  id: lint
+  id: "Static Code Analysis"
   entrypoint: npm
   args: ['run', 'lint']
 - name: node:12
-  id: unit-test
+  id: "Unit Test"
   entrypoint: npm
   args: ['run', 'unit-test']
 - name: 'gcr.io/cloud-builders/mvn'
-  id: process-resources
+  id: "Process Resources"
   entrypoint: 'bash'
   args:
     - -c 
@@ -47,16 +48,16 @@ steps:
       source /workspace/build_vars &&
       mvn -f cloudbuild-pom.xml -ntp process-resources -P${build_profile} -Dorg=$PROJECT_ID -Ddeployment.suffix=${build_prefix} -Dcommit=$COMMIT_SHA -Dbranch=$BRANCH_NAME -Duser.name=cloudbuild
 - name: 'gcr.io/cloud-builders/mvn'
-  id: pre-deployment-configurations
+  id: "Pre-deployment Configurations"
   entrypoint: 'bash'
   args:
     - -c 
     - |
       # Read environment variables from disk
       source /workspace/build_vars &&
-      mvn -f cloudbuild-pom.xml -ntp apigee-config:targetservers -P${build_profile} -Dorg=$PROJECT_ID -Ddeployment.suffix=${build_prefix} -Dfile=admin.json
+      mvn -f cloudbuild-pom.xml -ntp apigee-config:targetservers -P${build_profile} -Dorg=$PROJECT_ID -Ddeployment.suffix=${build_prefix} -Dbearer=${build_token}
 - name: 'gcr.io/cloud-builders/mvn'
-  id: package
+  id: "Package"
   entrypoint: 'bash'
   args:
     - -c 
@@ -65,16 +66,15 @@ steps:
       source /workspace/build_vars &&
       mvn -f cloudbuild-pom.xml -ntp apigee-enterprise:configure -P${build_profile} -Dorg=$PROJECT_ID -Ddeployment.suffix=${build_prefix}
 - name: 'gcr.io/cloud-builders/mvn'
-  id: deploy
+  id: "Deploy"
   entrypoint: 'bash'
   args:
     - -c 
     - |
       # Read environment variables from disk
       source /workspace/build_vars &&
-      mvn -f cloudbuild-pom.xml -ntp apigee-enterprise:deploy -P${build_profile} -Dorg=$PROJECT_ID -Ddeployment.suffix=${build_prefix} -Dfile=admin.json
+      mvn -f cloudbuild-pom.xml -ntp apigee-enterprise:deploy -P${build_profile} -Dorg=$PROJECT_ID -Ddeployment.suffix=${build_prefix} -Dbearer=${build_token}
 - name: node:12
-  id: functional-test
+  id: "Functional Test"
   entrypoint: npm
   args: ['run', 'integration-test']
-
