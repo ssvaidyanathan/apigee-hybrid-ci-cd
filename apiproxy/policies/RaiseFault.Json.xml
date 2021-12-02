@@ -1,4 +1,5 @@
 <RaiseFault name="RaiseFault.Json">
+	<!-- Raise Fault code -->
 	<FaultResponse>
 		<Set>
 			<Headers>
