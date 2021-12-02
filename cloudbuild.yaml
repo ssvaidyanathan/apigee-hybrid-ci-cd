@@ -27,19 +27,13 @@ steps:
 #  entrypoint: 'bash'
 #  args: [ '-c', "gcloud secrets versions access latest --secret=apigee-org-admin --format='get(payload.data)' | tr '_-' '/+' | base64 -d > admin.json" ]
 - name: node:12
-  id: install-npm-modules
+  id: "Install Dependencies"
   entrypoint: npm
   args: ['install', '--silent', '--no-fund']
 - name: node:12
   id: "Static Code Analysis"
-  entrypoint: bash
-  args:
-      - "-c"
-      - |-
-        npm run apigeelint | tee report.apigeelint.html && \
-        if [ ${PIPESTATUS[0]} -ne "0" ]; then exit -1; fi && \
-        npm run eslint | tee report.eslint.html && \
-        if [ ${PIPESTATUS[0]} -ne "0" ]; then exit -1; fi
+  entrypoint: npm
+  args: ['run', 'lint']
 - name: node:12
   id: "Unit Test"
   entrypoint: npm
@@ -82,19 +76,5 @@ steps:
       mvn -f cloudbuild-pom.xml -ntp apigee-enterprise:deploy -P${build_profile} -Dorg=$PROJECT_ID -Ddeployment.suffix=${build_prefix} -Dbearer=${build_token}
 - name: node:12
   id: "Functional Test"
-  entrypoint: bash
-  args:
-      - "-c"
-      - |-
-        npm run integration-test | tee report.e2e.html && \
-        if [ ${PIPESTATUS[0]} -ne "0" ]; then exit -1; fi
-- name: "gcr.io/cloud-builders/gsutil"
-  id: "Archive Report"
-  entrypoint: "bash"
-  args:
-      - "-c"
-      - |-
-        gsutil cp -r coverage* \
-        gs://${PROJECT_ID}_cloudbuild/reports/$BUILD_ID/coverage && \
-        gsutil cp ./report.*.html \
-        gs://${PROJECT_ID}_cloudbuild/reports/$BUILD_ID
+  entrypoint: npm
+  args: ['run', 'integration-test']
