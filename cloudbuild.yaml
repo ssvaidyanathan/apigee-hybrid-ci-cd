@@ -21,10 +21,10 @@ steps:
 
       # write all "build_" variables to the persistent volume "/workspace"
       env | grep "^build_" > /workspace/build_vars
-- name: gcr.io/cloud-builders/gcloud
-  id: fetch-credentials
-  entrypoint: 'bash'
-  args: [ '-c', "gcloud secrets versions access latest --secret=apigee-org-admin --format='get(payload.data)' | tr '_-' '/+' | base64 -d > admin.json" ]
+#- name: gcr.io/cloud-builders/gcloud
+#  id: fetch-credentials
+#  entrypoint: 'bash'
+#  args: [ '-c', "gcloud secrets versions access latest --secret=apigee-org-admin --format='get(payload.data)' | tr '_-' '/+' | base64 -d > admin.json" ]
 - name: node:12
   id: install-npm-modules
   entrypoint: npm
@@ -54,7 +54,7 @@ steps:
     - |
       # Read environment variables from disk
       source /workspace/build_vars &&
-      mvn -f cloudbuild-pom.xml -ntp apigee-config:targetservers -P${build_profile} -Dorg=$PROJECT_ID -Ddeployment.suffix=${build_prefix} -Dfile=admin.json
+      mvn -f cloudbuild-pom.xml -ntp apigee-config:targetservers -P${build_profile} -Dorg=$PROJECT_ID -Ddeployment.suffix=${build_prefix} -Dbearer=$(gcloud auth print-access-token)
 - name: 'gcr.io/cloud-builders/mvn'
   id: package
   entrypoint: 'bash'
@@ -72,7 +72,7 @@ steps:
     - |
       # Read environment variables from disk
       source /workspace/build_vars &&
-      mvn -f cloudbuild-pom.xml -ntp apigee-enterprise:deploy -P${build_profile} -Dorg=$PROJECT_ID -Ddeployment.suffix=${build_prefix} -Dfile=admin.json
+      mvn -f cloudbuild-pom.xml -ntp apigee-enterprise:deploy -P${build_profile} -Dorg=$PROJECT_ID -Ddeployment.suffix=${build_prefix} -Dbearer=$(gcloud auth print-access-token)
 - name: node:12
   id: functional-test
   entrypoint: npm
