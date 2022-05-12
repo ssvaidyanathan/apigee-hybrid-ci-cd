@@ -2,15 +2,16 @@
 	"name": "currency-v1",
 	"version": "1.0.0",
 	"devDependencies": {
-		"apickli": "^3.0.1",
-		"apigeelint": "^2.11.0",
 		"@cucumber/cucumber": "^7.3.0",
 		"@cucumber/pretty-formatter": "1.0.0-alpha.1",
+		"apickli": "^3.0.1",
+		"apigeelint": "^2.21.3",
+		"chai": "^3",
+		"chai-fuzzy": "^1",
+		"cucumber-html-reporter": "^5.5.0",
 		"eslint": "^7.0.0",
 		"eslint-config-google": "^0.14.0",
 		"eslint-config-prettier": "^6.11.0",
-		"chai": "^3",
-		"chai-fuzzy": "^1",
 		"mocha": "^7.2.0",
 		"nyc": "^15.1.0",
 		"prettier": "^2.0.5",
@@ -20,7 +21,7 @@
 		"lint": "npm run eslint && npm run apigeelint",
 		"eslint": "eslint -c .eslintrc-jsc.yml --format json",
 		"apigeelint": "apigeelint -s apiproxy -f table.js -e PO013,PO025",
-		"unit-test": "nyc mocha --recursive \"./test/unit/*.js\"",
-		"integration-test": "cucumber-js ./target/test/integration --publish-quiet -f @cucumber/pretty-formatter"
+		"unit-test": "nyc mocha --recursive \"./test/unit/*.js\" && npx nyc report --reporter=html",
+		"integration-test": "node ./node_modules/.bin/cucumber-js ./target/test/integration --format json:./target/reports.json --publish-quiet"
 	}
 }

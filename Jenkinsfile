@@ -2,7 +2,7 @@ pipeline {
     agent {
       dockerfile true
     }
-
+ 
     environment {
         // Uncomment below for hybrid
         //APIGEE_SA_CREDS = credentials('apigee-service-account')
@@ -45,9 +45,24 @@ pipeline {
               sh "mvn clean"
             }
         }
-        stage('Static Code Analysis, Unit Test and Coverage') {
+        stage('Install Dependencies') {
             steps {
-              sh "mvn -ntp test -P${env.APIGEE_PROFILE} -Dorg=${env.ORG} -Ddeployment.suffix=${env.APIGEE_PREFIX} -Dcommit=${env.GIT_COMMIT} -Dbranch=${env.GIT_BRANCH} -Duser.name=jenkins"
+              sh "npm install --silent --no-fund"
+            }
+        }
+        stage('Static Code analysis') {
+            steps {
+              sh "npm run lint"
+            }
+        }
+        stage('Unit Test and Coverage') {
+            steps {
+              sh "npm run unit-test"
+            }
+        }
+        stage('Process Resources') {
+            steps {
+              sh "mvn -ntp process-resources -P${env.APIGEE_PROFILE} -Dorg=${env.ORG} -Ddeployment.suffix=${env.APIGEE_PREFIX} -Dcommit=${env.GIT_COMMIT} -Dbranch=${env.GIT_BRANCH} -Duser.name=jenkins"
             }
         }
         stage('Pre-deployment configuration') {
@@ -73,7 +88,7 @@ pipeline {
         }
         stage('Functional Test') {
           steps {
-            sh "node ./node_modules/cucumber/bin/cucumber.js target/test/integration/features --format json:target/reports.json"
+            sh "npm run integration-test"
           }
         }
     }
@@ -84,25 +99,19 @@ pipeline {
                                   allowMissing: false,
                                   alwaysLinkToLastBuild: false,
                                   keepAll: false,
-                                  reportDir: "coverage/lcov-report",
+                                  reportDir: "coverage",
                                   reportFiles: 'index.html',
                                   reportName: 'HTML Report'
                                 ]
                         )
 
             step([
-                    $class: 'CucumberReportPublisher',
-                    fileExcludePattern: '',
-                    fileIncludePattern: "**/reports.json",
-                    ignoreFailedTests: false,
-                    jenkinsBasePath: '',
-                    jsonReportDirectory: "target",
-                    missingFails: false,
-                    parallelTesting: false,
-                    pendingFails: false,
-                    skippedFails: false,
-                    undefinedFails: false
-                    ])
+                  $class: 'CucumberReportPublisher',
+                  fileIncludePattern: '**/reports.json',
+                  jsonReportDirectory: "target",
+                  sortingMethod: 'ALPHABETICAL',
+                  trendsLimit: 10
+                ])
         }
     }
 }
