@@ -1,8 +1,12 @@
 # Apigee pipeline
 
+# Installed two free plugins to publish the HTML repo for the Static Code Analysis and Cucumber report 
+# https://marketplace.visualstudio.com/items?itemName=JakubRumpca.azure-pipelines-html-report and https://marketplace.visualstudio.com/items?itemName=MaciejMaciejewski.azure-pipelines-cucumber
+
+
 trigger:
 - feature/*
-- master
+- main
 - prod
 
 pool:
@@ -12,7 +16,7 @@ steps:
 
 - task: NodeTool@0
   inputs:
-    versionSpec: '10.23.1'
+    versionSpec: '12.x'
 
 - task: DownloadSecureFile@1
   name: mySecureFile
@@ -23,7 +27,7 @@ steps:
 # Set variables
 - bash: |
     echo "##vso[task.setvariable variable=APIGEE_ORG]ssv-apigee-ngsaas-project2"
-    if [ "$(Build.SourceBranchName)" = "master" ]
+    if [ "$(Build.SourceBranchName)" = "main" ]
     then
       echo "##vso[task.setvariable variable=APIGEE_PROFILE]test"
       echo "##vso[task.setvariable variable=APIGEE_DOMAIN]api-test.ssvaidyanathan.com"
@@ -38,27 +42,69 @@ steps:
     mvn clean
   displayName: 'Clean'
 
-- bash: |
-    mvn -ntp test -P$(APIGEE_PROFILE) -Dorg=$(APIGEE_ORG) -Ddeployment.suffix="" -Dapi.northbound.domain=$(APIGEE_DOMAIN) -Dcommit=$(Build.SourceVersion) -Dbranch=$(Build.SourceBranchName) -Duser.name=azureops
-  displayName: 'Static Code Analysis, Unit Test and Coverage'
+- task: Npm@1
+  inputs:
+    command: 'install'
+    workingDir: '.'
+  displayName: Install Node dependencies
 
 - bash: |
-    mvn apigee-config:targetservers -P$(APIGEE_PROFILE) -Ddeployment.suffix="" -Dorg=$(APIGEE_ORG) -Dapi.northbound.domain=$(APIGEE_DOMAIN) -Dfile=$(mySecureFile.secureFilePath)
-  displayName: 'Pre-deployment configuration'
+    npm run lint
+  displayName: 'Static Code Analysis'
+
+- task: PublishHtmlReport@1
+  condition: always()
+  displayName: 'Publish Apigeelint Report'
+  inputs:
+    reportDir: 'code_test_output/apigeelint-output.html'
+    tabName: 'Apigeelint Report'
+
+- task: PublishHtmlReport@1
+  condition: always()
+  displayName: 'Publish ESLint Report'
+  inputs:
+    reportDir: 'code_test_output/eslint-output.html'
+    tabName: 'ESLint Report'
 
 - bash: |
-    mvn -ntp apigee-enterprise:configure -P$(APIGEE_PROFILE) -Ddeployment.suffix="" -Dorg=$(APIGEE_ORG) -Dapi.northbound.domain=$(APIGEE_DOMAIN) -Dfile=$(mySecureFile.secureFilePath)
-  displayName: 'Package proxy bundle'
+    npm run unit-test
+  displayName: 'Unit Testing and Code Coverage'
+
+- task: PublishHtmlReport@1
+  condition: always()
+  displayName: 'Publish Unit Test and Coverage Report'
+  inputs:
+    reportDir: 'code_test_output/coverage-output.html'
+    tabName: 'Coverage Report'
 
 - bash: |
-    mvn -ntp apigee-enterprise:deploy -P$(APIGEE_PROFILE) -Ddeployment.suffix="" -Dorg=$(APIGEE_ORG) -Dapi.northbound.domain=$(APIGEE_DOMAIN) -Dfile=$(mySecureFile.secureFilePath)
-  displayName: 'Deploy proxy bundle'
+   mvn -ntp process-resources -P$(APIGEE_PROFILE) -Dorg=$(APIGEE_ORG) -Ddeployment.suffix="" -Dapi.northbound.domain=$(APIGEE_DOMAIN) -Dcommit=$(Build.SourceVersion) -Dbranch=$(Build.SourceBranchName) -Duser.name=azureops
+ displayName: 'Process Resources'
 
 - bash: |
-    mvn -ntp apigee-config:apiproducts apigee-config:developers apigee-config:apps -P$(APIGEE_PROFILE) -Ddeployment.suffix="" -Dorg=$(APIGEE_ORG) -Dapi.northbound.domain=$(APIGEE_DOMAIN) -Dfile=$(mySecureFile.secureFilePath)
-  displayName: 'Post-deployment configuration'
+   mvn apigee-config:targetservers -P$(APIGEE_PROFILE) -Ddeployment.suffix="" -Dorg=$(APIGEE_ORG) -Dapi.northbound.domain=$(APIGEE_DOMAIN) -Dfile=$(mySecureFile.secureFilePath)
+ displayName: 'Pre-deployment configuration'
 
 - bash: |
-    node ./node_modules/cucumber/bin/cucumber.js target/test/integration/features --format json:target/reports.json
-  displayName: 'Functional Test'
+   mvn -ntp apigee-enterprise:configure -P$(APIGEE_PROFILE) -Ddeployment.suffix="" -Dorg=$(APIGEE_ORG) -Dapi.northbound.domain=$(APIGEE_DOMAIN) -Dfile=$(mySecureFile.secureFilePath)
+ displayName: 'Package proxy bundle'
 
+- bash: |
+   mvn -ntp apigee-enterprise:deploy -P$(APIGEE_PROFILE) -Ddeployment.suffix="" -Dorg=$(APIGEE_ORG) -Dapi.northbound.domain=$(APIGEE_DOMAIN) -Dfile=$(mySecureFile.secureFilePath)
+ displayName: 'Deploy proxy bundle'
+
+- bash: |
+   mvn -ntp apigee-config:apiproducts apigee-config:developers apigee-config:apps -P$(APIGEE_PROFILE) -Ddeployment.suffix="" -Dorg=$(APIGEE_ORG) -Dapi.northbound.domain=$(APIGEE_DOMAIN) -Dfile=$(mySecureFile.secureFilePath)
+ displayName: 'Post-deployment configuration'
+
+- bash: |
+   npm run integration-test
+ displayName: 'Functional Test'
+
+- task: PublishCucumberReport@1
+ displayName: 'Publish Integration Test Results'
+ inputs:
+   jsonDir: ./target/func_test_output
+   outputPath: ./target/func_test_output
+   name: 'Functional Test Report'
+   title: API
