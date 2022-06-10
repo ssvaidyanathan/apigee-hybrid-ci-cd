@@ -26,18 +26,18 @@ steps:
 
 # Set variables
 - bash: |
-    echo "##vso[task.setvariable variable=APIGEE_ORG]ssv-apigee-ngsaas-project2"
+    echo "##vso[task.setvariable variable=APIGEE_ORG]ssv-apigee-asm-demo"
     if [ "$(Build.SourceBranchName)" = "main" ]
     then
       echo "##vso[task.setvariable variable=APIGEE_PROFILE]test"
-      echo "##vso[task.setvariable variable=APIGEE_DOMAIN]api-test.ssvaidyanathan.com"
+      echo "##vso[task.setvariable variable=DEPLOYMENT_SUFFIX]"
     elif [ "$(Build.SourceBranchName)" = "prod" ]
     then
       echo "##vso[task.setvariable variable=APIGEE_PROFILE]prod"
-      echo "##vso[task.setvariable variable=APIGEE_DOMAIN]api-prod.ssvaidyanathan.com"
+      echo "##vso[task.setvariable variable=DEPLOYMENT_SUFFIX]"
     else
       echo "##vso[task.setvariable variable=APIGEE_PROFILE]dev"
-      echo "##vso[task.setvariable variable=APIGEE_DOMAIN]api-dev.ssvaidyanathan.com"
+      echo "##vso[task.setvariable variable=DEPLOYMENT_SUFFIX]azureops"
     fi
     mvn clean
   displayName: 'Clean'
@@ -78,33 +78,39 @@ steps:
     tabName: 'Coverage Report'
 
 - bash: |
-   mvn -ntp process-resources -P$(APIGEE_PROFILE) -Dorg=$(APIGEE_ORG) -Ddeployment.suffix="" -Dapi.northbound.domain=$(APIGEE_DOMAIN) -Dcommit=$(Build.SourceVersion) -Dbranch=$(Build.SourceBranchName) -Duser.name=azureops
- displayName: 'Process Resources'
+   mvn -ntp process-resources -P$(APIGEE_PROFILE) -Dorg=$(APIGEE_ORG) -Ddeployment.suffix="$(DEPLOYMENT_SUFFIX)" -Dcommit=$(Build.SourceVersion) -Dbranch=$(Build.SourceBranchName) -Duser.name=azureops
+  displayName: 'Process Resources'
 
 - bash: |
-   mvn apigee-config:targetservers -P$(APIGEE_PROFILE) -Ddeployment.suffix="" -Dorg=$(APIGEE_ORG) -Dapi.northbound.domain=$(APIGEE_DOMAIN) -Dfile=$(mySecureFile.secureFilePath)
- displayName: 'Pre-deployment configuration'
+   mvn apigee-config:targetservers -P$(APIGEE_PROFILE) -Ddeployment.suffix="$(DEPLOYMENT_SUFFIX)" -Dorg=$(APIGEE_ORG) -Dfile=$(mySecureFile.secureFilePath)
+  displayName: 'Pre-deployment configuration'
 
 - bash: |
-   mvn -ntp apigee-enterprise:configure -P$(APIGEE_PROFILE) -Ddeployment.suffix="" -Dorg=$(APIGEE_ORG) -Dapi.northbound.domain=$(APIGEE_DOMAIN) -Dfile=$(mySecureFile.secureFilePath)
- displayName: 'Package proxy bundle'
+   mvn -ntp apigee-enterprise:configure -P$(APIGEE_PROFILE) -Ddeployment.suffix="$(DEPLOYMENT_SUFFIX)" -Dorg=$(APIGEE_ORG) -Dfile=$(mySecureFile.secureFilePath)
+  displayName: 'Package proxy bundle'
 
 - bash: |
-   mvn -ntp apigee-enterprise:deploy -P$(APIGEE_PROFILE) -Ddeployment.suffix="" -Dorg=$(APIGEE_ORG) -Dapi.northbound.domain=$(APIGEE_DOMAIN) -Dfile=$(mySecureFile.secureFilePath)
- displayName: 'Deploy proxy bundle'
+   mvn -ntp apigee-enterprise:deploy -P$(APIGEE_PROFILE) -Ddeployment.suffix="$(DEPLOYMENT_SUFFIX)" -Dorg=$(APIGEE_ORG) -Dfile=$(mySecureFile.secureFilePath)
+  displayName: 'Deploy proxy bundle'
 
 - bash: |
-   mvn -ntp apigee-config:apiproducts apigee-config:developers apigee-config:apps -P$(APIGEE_PROFILE) -Ddeployment.suffix="" -Dorg=$(APIGEE_ORG) -Dapi.northbound.domain=$(APIGEE_DOMAIN) -Dfile=$(mySecureFile.secureFilePath)
- displayName: 'Post-deployment configuration'
+   mvn -ntp apigee-config:apiproducts apigee-config:developers apigee-config:apps -P$(APIGEE_PROFILE) -Ddeployment.suffix="$(DEPLOYMENT_SUFFIX)" -Dorg=$(APIGEE_ORG) -Dfile=$(mySecureFile.secureFilePath)
+  displayName: 'Post-deployment configuration'
 
 - bash: |
    npm run integration-test
- displayName: 'Functional Test'
+  displayName: 'Functional Test'
 
 - task: PublishCucumberReport@1
- displayName: 'Publish Integration Test Results'
- inputs:
-   jsonDir: ./target/func_test_output
-   outputPath: ./target/func_test_output
-   name: 'Functional Test Report'
-   title: API
+  displayName: 'Publish Integration Test Results'
+  inputs:
+    jsonDir: ./target/func_test_output
+    outputPath: ./target/func_test_output
+    name: 'Functional Test Report'
+    title: API
+
+# the devportal username and password are stored as Pipeline variables as APIGEE_DEVPORTAL_USERNAME and APIGEE_DEVPORTAL_PASSWORD
+- bash: |
+   mvn -ntp com.apigee.smartdocs.config:apigee-smartdocs-maven-plugin:apidoc@smartdocs-deploy -Pprod -Dorg=$(APIGEE_ORG) -Dpurl=$(APIGEE_DEVPORTAL_URL) -Dpusername=$(APIGEE_DEVPORTAL_USERNAME) -Dppassword=$(APIGEE_DEVPORTAL_PASSWORD)
+  displayName: 'Publish Open API Spec'
+  condition: eq(variables['Build.SourceBranchName'], 'prod')
