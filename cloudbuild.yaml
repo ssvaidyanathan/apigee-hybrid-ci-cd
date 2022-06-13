@@ -9,12 +9,12 @@ steps:
       # name all values with a common prefix (we'll use "build_")
       if [ "$BRANCH_NAME" = "master" ]
       then
-        export build_profile="ngsaas-test"
+        export build_profile="test"
       elif [ "$BRANCH_NAME" = "prod" ]
       then
-        export build_profile="ngsaas-prod"
+        export build_profile="prod"
       else
-        export build_profile="ngsaas-dev"
+        export build_profile="dev"
       fi
 
       export build_prefix="" 

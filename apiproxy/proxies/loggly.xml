@@ -20,6 +20,5 @@
 
 	<HTTPProxyConnection>
 		<BasePath>/currency/v1/logs</BasePath>
-		<VirtualHost>secure</VirtualHost>
 	</HTTPProxyConnection>
 </ProxyEndpoint>

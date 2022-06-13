@@ -37,20 +37,37 @@
 	<!-- For apigee.options, refer to "Advanced Configuration Options" under https://github.com/apigee/apigee-deploy-maven-plugin#pom-xml-sample -->
 	<profiles>
 		<profile>
-			<id>test</id>
+			<id>dev</id>
 			<properties>
-				<apigee.profile>test</apigee.profile>
-				<apigee.env>test</apigee.env>
+				<apigee.profile>dev</apigee.profile>
+				<apigee.env>eval</apigee.env>
 				<apigee.hosturl>https://apigee.googleapis.com</apigee.hosturl>
 				<apigee.apiversion>v1</apigee.apiversion>
 				<apigee.org>${org}</apigee.org>
 				<apigee.options>override</apigee.options> <!-- overrides is default and the only option -->
 				<apigee.bearer>${bearer}</apigee.bearer> <!-- this takes precedence over service account file -->
 				<apigee.serviceaccount.file>${file}</apigee.serviceaccount.file>
-				<apigee.config.options>update</apigee.config.options>
 				<apigee.config.dir>./target/resources/edge</apigee.config.dir>
-				<api.northbound.domain>amer-cs-hybrid-demo2-test.hybrid-apigee.net</api.northbound.domain>
-				<api.testtag>~@wip</api.testtag>
+				<apigee.config.options>update</apigee.config.options>
+				<api.northbound.domain>34.117.135.82.nip.io</api.northbound.domain>
+				<api.testtag>~@wip,~@mock</api.testtag>
+			</properties>
+		</profile>
+		<profile>
+			<id>test</id>
+			<properties>
+				<apigee.profile>test</apigee.profile>
+				<apigee.env>eval</apigee.env>
+				<apigee.hosturl>https://apigee.googleapis.com</apigee.hosturl>
+				<apigee.apiversion>v1</apigee.apiversion>
+				<apigee.org>${org}</apigee.org>
+				<apigee.options>override</apigee.options> <!-- overrides is default and the only option -->
+				<apigee.bearer>${bearer}</apigee.bearer> <!-- this takes precedence over service account file -->
+				<apigee.serviceaccount.file>${file}</apigee.serviceaccount.file>
+				<apigee.config.dir>./target/resources/edge</apigee.config.dir>
+				<apigee.config.options>update</apigee.config.options>
+				<api.northbound.domain>34.117.135.82.nip.io</api.northbound.domain>
+				<api.testtag>~@wip,~@mock</api.testtag>
 			</properties>
 		</profile>
 		<profile>
@@ -64,61 +81,18 @@
 				<apigee.options>override</apigee.options> <!-- overrides is default and the only option -->
 				<apigee.bearer>${bearer}</apigee.bearer> <!-- this takes precedence over service account file -->
 				<apigee.serviceaccount.file>${file}</apigee.serviceaccount.file>
-				<apigee.config.options>update</apigee.config.options>
-				<apigee.config.dir>./target/resources/edge</apigee.config.dir>
-				<api.northbound.domain>amer-cs-hybrid-demo2-test.hybrid-apigee.net</api.northbound.domain>
-				<api.testtag>~@wip,~@mock</api.testtag>
-			</properties>
-		</profile>
-		<profile>
-			<id>ngsaas-dev</id>
-			<properties>
-				<apigee.profile>ngsaas-dev</apigee.profile>
-				<apigee.env>default-dev</apigee.env>
-				<apigee.hosturl>https://apigee.googleapis.com</apigee.hosturl>
-				<apigee.apiversion>v1</apigee.apiversion>
-				<apigee.org>${org}</apigee.org>
-				<apigee.options>override</apigee.options> <!-- overrides is default and the only option -->
-				<apigee.bearer>${bearer}</apigee.bearer> <!-- this takes precedence over service account file -->
-				<apigee.serviceaccount.file>${file}</apigee.serviceaccount.file>
 				<apigee.config.dir>./target/resources/edge</apigee.config.dir>
 				<apigee.config.options>update</apigee.config.options>
-				<api.northbound.domain>api-dev.ssvaidyanathan.com</api.northbound.domain>
+				<api.northbound.domain>prod.34.117.135.82.nip.io</api.northbound.domain>
 				<api.testtag>~@wip,~@mock</api.testtag>
-			</properties>
-		</profile>
-		<profile>
-			<id>ngsaas-test</id>
-			<properties>
-				<apigee.profile>ngsaas-test</apigee.profile>
-				<apigee.env>default-test</apigee.env>
-				<apigee.hosturl>https://apigee.googleapis.com</apigee.hosturl>
-				<apigee.apiversion>v1</apigee.apiversion>
-				<apigee.org>${org}</apigee.org>
-				<apigee.options>override</apigee.options> <!-- overrides is default and the only option -->
-				<apigee.bearer>${bearer}</apigee.bearer> <!-- this takes precedence over service account file -->
-				<apigee.serviceaccount.file>${file}</apigee.serviceaccount.file>
-				<apigee.config.dir>./target/resources/edge</apigee.config.dir>
-				<apigee.config.options>update</apigee.config.options>
-				<api.northbound.domain>api-test.ssvaidyanathan.com</api.northbound.domain>
-				<api.testtag>~@wip,~@mock</api.testtag>
-			</properties>
-		</profile>
-		<profile>
-			<id>ngsaas-prod</id>
-			<properties>
-				<apigee.profile>ngsaas-prod</apigee.profile>
-				<apigee.env>default-prod</apigee.env>
-				<apigee.hosturl>https://apigee.googleapis.com</apigee.hosturl>
-				<apigee.apiversion>v1</apigee.apiversion>
-				<apigee.org>${org}</apigee.org>
-				<apigee.options>override</apigee.options> <!-- overrides is default and the only option -->
-				<apigee.bearer>${bearer}</apigee.bearer> <!-- this takes precedence over service account file -->
-				<apigee.serviceaccount.file>${file}</apigee.serviceaccount.file>
-				<apigee.config.dir>./target/resources/edge</apigee.config.dir>
-				<apigee.config.options>update</apigee.config.options>
-				<api.northbound.domain>api-prod.ssvaidyanathan.com</api.northbound.domain>
-				<api.testtag>~@wip,~@mock</api.testtag>
+				<portal.url>${purl}</portal.url><!-- URL of the developer portal. -->
+				<portal.username>${pusername}</portal.username><!-- Username for the developer portal. -->
+  				<portal.password>${ppassword}</portal.password><!-- Password for the developer portal. -->
+				<portal.format>yaml</portal.format><!-- Format of the OpenAPI specs. json|yaml -->
+				<portal.api.doc.format>basic_html</portal.api.doc.format><!-- Format in the portal. Values: basic_html, restricted_html, full_html -->
+				<portal.directory>./target/openapi</portal.directory> <!-- Directory where OpenAPI specs are accessible. Using ./specs for sample -->
+				<apigee.smartdocs.config.options>update</apigee.smartdocs.config.options>
+				<apigee.smartdocs.config.file>./apicatalog-config.json</apigee.smartdocs.config.file>
 			</properties>
 		</profile>
 	</profiles>
@@ -129,13 +103,18 @@
 				<plugin>
 					<groupId>io.apigee.build-tools.enterprise4g</groupId>
 					<artifactId>apigee-edge-maven-plugin</artifactId>
-					<version>2.1.2</version>
+					<version>2.3.1</version>
 				</plugin>
 				<plugin>
 					<groupId>com.apigee.edge.config</groupId>
 				    <artifactId>apigee-config-maven-plugin</artifactId>
-				    <version>2.1.3</version>
+				    <version>2.3.0</version>
 			    </plugin>
+				<plugin>
+					<groupId>com.apigee.smartdocs.config</groupId>
+					<artifactId>apigee-smartdocs-maven-plugin</artifactId>
+					<version>2.2.3</version>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 
@@ -162,6 +141,7 @@
 										<include>apiproxy/**</include>
 										<include>test/integration/**</include>
 										<include>resources/**</include>
+										<include>openapi/**</include>
 									</includes>
 								</resource>
 							</resources>
@@ -187,6 +167,7 @@
 				<configuration>
 					<basedir>${target.root.dir}</basedir>
 					<includes>
+						<include>openapi/currency-v1.yaml</include>
 						<include>apiproxy/proxies/default.xml</include>
 						<include>apiproxy/proxies/loggly.xml</include>
 						<include>apiproxy/currency-v1.xml</include>
@@ -221,7 +202,7 @@
 			<plugin>
 				<groupId>io.apigee.build-tools.enterprise4g</groupId>
 				<artifactId>apigee-edge-maven-plugin</artifactId>
-				<version>2.1.2</version>
+				<version>2.3.1</version>
 				<executions>
 					<execution>
 						<id>configure-bundle-step</id>
@@ -244,7 +225,7 @@
 			<plugin>
 			    <groupId>com.apigee.edge.config</groupId>
 			    <artifactId>apigee-config-maven-plugin</artifactId>
-			    <version>2.1.3</version>
+			    <version>2.3.0</version>
 			    <executions>
 			    	<execution>
 			            <id>create-config-keyvaluemaps</id>
@@ -290,67 +271,17 @@
 			        </execution>
 			    </executions>
 			</plugin> 
-
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>exec-maven-plugin</artifactId>
-				<version>1.3.2</version>
+				<groupId>com.apigee.smartdocs.config</groupId>
+				<artifactId>apigee-smartdocs-maven-plugin</artifactId>
+				<version>2.2.3</version>
 				<executions>
-					<!-- npm install -->
 					<execution>
-						<id>npm-install</id>
-						<phase>validate</phase>
+						<id>smartdocs-deploy</id>
+						<phase>deploy</phase>
 						<goals>
-							<goal>exec</goal>
+							<goal>apidoc</goal>
 						</goals>
-						<configuration>
-							<executable>npm</executable>
-							<commandlineArgs>
-								install --silent --no-fund
-							</commandlineArgs>
-						</configuration>
-					</execution>
-					<!-- lint -->
-					<execution>
-						<id>lint</id>
-						<phase>validate</phase>
-						<goals>
-							<goal>exec</goal>
-						</goals>
-						<configuration>
-							<executable>npm</executable>
-							<commandlineArgs>
-								run lint
-							</commandlineArgs>
-						</configuration>
-					</execution>
-					<!-- run unit tests -->
-					<execution>
-						<id>unit</id>
-						<phase>test</phase>
-						<goals>
-							<goal>exec</goal>
-						</goals>
-						<configuration>
-							<executable>npm</executable>
-							<commandlineArgs>
-								run unit-test
-							</commandlineArgs>
-						</configuration>
-					</execution>
-					<!-- run integration tests -->
-					<execution>
-						<id>integration</id>
-						<phase>install</phase>
-						<goals>
-							<goal>exec</goal>
-						</goals>
-						<configuration>
-							<executable>npm</executable>
-							<commandlineArgs>
-								run integration-test
-							</commandlineArgs>
-						</configuration>
 					</execution>
 				</executions>
 			</plugin>
