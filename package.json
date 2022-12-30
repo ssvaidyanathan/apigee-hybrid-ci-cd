@@ -12,7 +12,7 @@
 		"eslint": "^7.0.0",
 		"eslint-config-google": "^0.14.0",
 		"eslint-config-prettier": "^6.11.0",
-		"mocha": "^7.2.0",
+		"mocha": "^10.2.0",
 		"mocha-simple-html-reporter": "^2.0.0",
 		"nyc": "^15.1.0",
 		"prettier": "^2.0.5",
